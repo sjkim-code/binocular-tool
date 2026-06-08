@@ -1,0 +1,1972 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>양안시기능 검사 통합 도구 - 단계별 연결 강화판</title><style>.integrated-bridge{width:min(100% - 28px,1240px);margin:22px auto 0}.bridge-inner{background:linear-gradient(135deg,#eaf4ff 0%,#f8fbff 100%);border:1px solid #d7e6fb;border-radius:24px;padding:24px;box-shadow:0 14px 34px rgba(30,65,114,.08)}.bridge-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#dfeeff;color:#245aa8;font-size:14px;font-weight:800}.bridge-inner h2{margin:14px 0 10px;font-size:clamp(1.4rem,2vw,2rem);line-height:1.25;letter-spacing:-.02em}.bridge-inner p{margin:0;color:#4d6178}.bridge-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.bridge-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 16px;border-radius:14px;font-weight:800;text-decoration:none;background:#fff;color:#1d5fbf;border:1px solid #cfe0f7;box-shadow:0 10px 22px rgba(12,38,88,.08)}#flowchartMount{display:block}@media (max-width:900px){.integrated-bridge{width:min(100% - 18px,1240px)}.bridge-inner{padding:20px 18px;border-radius:20px}.bridge-actions{display:grid;grid-template-columns:1fr}}</style><style>:root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --line: #d9e1ec;
+      --text: #1d2a3a;
+      --sub: #5e6b7a;
+      --primary: #2b6ef2;
+      --primary-dark: #1d54bf;
+      --ok: #178f4e;
+      --ok-bg: #e9f8ef;
+      --warn: #9a6a00;
+      --warn-bg: #fff7df;
+      --bad: #c5352d;
+      --bad-bg: #fdeceb;
+      --shadow: 0 12px 30px rgba(19, 35, 68, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+      background: linear-gradient(180deg, #f7f9fc 0%, #eef3fa 100%);
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .title-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .title-top {
+      margin: 0 0 8px;
+      color: var(--primary-dark);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .title-mid {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 36px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--sub);
+      font-size: 18px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(520px, 1fr) minmax(420px, 0.95fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 22px 24px 10px;
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .card-header p {
+      margin: 8px 0 0;
+      color: var(--sub);
+      font-size: 16px;
+    }
+
+    .form-area {
+      padding: 8px 24px 26px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin: 22px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #edf2f9;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: var(--sub);
+      margin-top: -2px;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid #c8d4e3;
+      border-radius: 12px;
+      padding: 14px 14px;
+      font-size: 18px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(43, 110, 242, 0.12);
+    }
+
+    input[disabled] {
+      background: #f3f6fb;
+      color: #8291a3;
+      cursor: not-allowed;
+    }
+
+    .inline-3 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 56px 56px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .inline-3 input,
+    .inline-3 select {
+      min-width: 0;
+    }
+
+    .unit-box {
+      border: 1px solid #c8d4e3;
+      background: #f8fbff;
+      border-radius: 12px;
+      min-width: 0;
+      white-space: nowrap;
+      font-size: 14px;
+      padding: 12px 6px;
+      text-align: center;
+      color: var(--sub);
+      font-weight: 700;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 15px 22px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: #e8eef8; color: var(--text); }
+    .btn-print { background: #1f9e8a; color: #fff; }
+    .btn-download { background: #6f42c1; color: #fff; }
+    .btn-submit { background: #d9485f; color: #fff; }
+
+    .result-area {
+      padding: 22px 24px 26px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .placeholder {
+      border: 2px dashed #d4deeb;
+      border-radius: 16px;
+      padding: 26px;
+      background: #fafcff;
+      color: var(--sub);
+      font-size: 18px;
+    }
+
+    .formula-box,
+    .summary-box,
+    .guide-box,
+    .info-box {
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .formula-box strong,
+    .summary-box strong,
+    .guide-box strong,
+    .info-box strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .aca-box {
+      border-radius: 18px;
+      padding: 22px 22px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #edf4ff 0%, #f8fbff 100%);
+      border: 1px solid #d8e6ff;
+    }
+
+    .aca-value {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin: 8px 0 10px;
+      color: #173d8e;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 78px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .ok { color: var(--ok); background: var(--ok-bg); }
+    .warn { color: var(--warn); background: var(--warn-bg); }
+    .bad { color: var(--bad); background: var(--bad-bg); }
+
+    .print-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-card,
+    .stat {
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+      font-weight: 800;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .meta-card span,
+    .stat span {
+      display: block;
+      font-size: 14px;
+      color: var(--sub);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+      overflow: hidden;
+      border-radius: 14px;
+      margin-top: 8px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e5edf7;
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f7fd;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .small-note {
+      color: var(--sub);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .signature-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .signature-line {
+      border-top: 2px solid #8fa0b3;
+      padding-top: 10px;
+      min-height: 42px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .pattern-card {
+      border: 1px solid #dfe7f2;
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: #ffffff;
+    }
+
+    .pattern-card h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .pattern-status {
+      margin-bottom: 8px;
+    }
+
+    .treatment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .treatment-card {
+      border: 1px solid #e6d9bf;
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: #fffaf1;
+    }
+
+    .treatment-card h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #7a4d00;
+    }
+
+    ul { margin: 10px 0 0 22px; }
+    li + li { margin-top: 6px; }
+
+
+    .input-cluster {
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid #dde6f1;
+      border-left-width: 6px;
+      border-radius: 20px;
+      background: #fcfdff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .input-cluster:first-of-type {
+      margin-top: 6px;
+    }
+
+    .cluster-basic {
+      background: linear-gradient(180deg, #fbfcff 0%, #f6f9ff 100%);
+      border-left-color: #7aa2f7;
+    }
+
+    .cluster-phoria {
+      background: linear-gradient(180deg, #fffdfb 0%, #fff7f0 100%);
+      border-left-color: #f2a65a;
+    }
+
+    .cluster-vergence {
+      background: linear-gradient(180deg, #fbfffd 0%, #f2fbf8 100%);
+      border-left-color: #52b69a;
+    }
+
+    .cluster-accommodation {
+      background: linear-gradient(180deg, #fdfbff 0%, #f6f1ff 100%);
+      border-left-color: #9b7ede;
+    }
+
+    .input-cluster .section-title {
+      margin: 0 0 8px;
+      padding: 0;
+      border: 0;
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      margin: 0 0 16px;
+      color: var(--sub);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .subsection-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .subsection-card {
+      border: 1px solid #dbe5ef;
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .subsection-title {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .subsection-desc {
+      margin: 0 0 12px;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .grid.grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .cluster-accommodation .subsection-card {
+      overflow: hidden;
+    }
+
+    .cluster-accommodation .grid.grid-3 {
+      gap: 14px 14px;
+      align-items: start;
+    }
+
+    .subsection-card .grid,
+    .input-cluster > .grid {
+      margin-top: 4px;
+    }
+
+    @media (max-width: 1300px) {
+      .grid.grid-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .result-area { position: static; }
+    }
+
+    @media (max-width: 900px) {
+      .grid.grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wrap { padding: 16px; }
+      .grid, .grid.grid-3, .print-meta, .stats, .signature-box, .pattern-grid, .treatment-grid { grid-template-columns: 1fr; }
+      .input-cluster { padding: 16px; }
+      .subsection-card { padding: 14px; }
+      h1 { font-size: 28px; }
+      .title-mid { font-size: 20px; }
+      .aca-value { font-size: 34px; }
+      body { font-size: 16px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 10mm; }
+      body {
+        background: #fff;
+        font-size: 10.5pt;
+        line-height: 1.35;
+      }
+      .wrap {
+        max-width: none;
+        padding: 0;
+      }
+      .title-box, .card {
+        box-shadow: none;
+        border: 1px solid #bbb;
+      }
+      #inputCard,
+      .btn-row,
+      .formula-box,
+      .stats,
+      .card-header {
+        display: none !important;
+      }
+      .layout { display: block; }
+      #resultCard {
+        border: 0;
+        box-shadow: none;
+      }
+      .title-box {
+        margin-bottom: 10px;
+        padding: 12px 14px;
+      }
+      .title-top { font-size: 13pt; }
+      .title-mid { font-size: 12pt; }
+      h1 { font-size: 17pt; margin-bottom: 6px; }
+      .subtitle { font-size: 10pt; }
+      .result-area {
+        position: static;
+        top: auto;
+        padding: 0;
+      }
+      .summary-box,
+      .guide-box,
+      .info-box,
+      .aca-box,
+      .pattern-card {
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        break-inside: avoid;
+      }
+      .aca-value {
+        font-size: 24pt;
+        margin: 4px 0 6px;
+      }
+      .pattern-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      table {
+        font-size: 9pt;
+        margin-top: 4px;
+      }
+      th, td { padding: 6px 6px; }
+      .small-note {
+        font-size: 8.5pt;
+        margin-top: 4px;
+      }
+      .signature-box {
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .signature-line {
+        min-height: 28px;
+        padding-top: 6px;
+      }
+    }
+#section-basic-info,#section-phoria,#section-vergence,#section-accommodation,#section-criteria,#section-analysis,#section-treatment,#inputCard,#resultCard{scroll-margin-top:22px;}
+</style>
+
+<style>
+    #flowchartMount,
+    .integrated-bridge {
+      display: none !important;
+    }
+    .student-only-note {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #d8e4f3;
+      background: #f7fbff;
+      color: #4a6079;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  </style></head><body><div id="flowchartMount" aria-label="검사 플로우 차트 영역"></div><section class="integrated-bridge" aria-labelledby="bridge-title"><div class="bridge-inner"><div class="bridge-badge">통합 실습 구간</div><h2 id="bridge-title">검사 플로우 차트 다음 단계: 실제 입력과 해석</h2><p>위 플로우 차트의 단계 버튼을 누르면 아래 입력 영역 또는 결과 영역의 해당 구간으로 바로 이동합니다. 교수자 시연에서는 단계 설명 후 바로 아래 항목을 입력하거나 결과를 해석하는 방식으로 연결하면 학습 흐름이 자연스럽습니다.</p><div class="bridge-actions"><a href="#section-basic-info">기본정보 입력으로 이동</a><a href="#section-analysis">종합 분석 보기</a><a href="#section-treatment">처치 추천 보기</a></div></div></section><div class="wrap" id="integratedTool">
+    <div class="title-box">
+      <p class="title-top">백석대학교 안경광학과</p>
+      <p class="title-mid">시기능 이상 및 실습</p>
+      <h1>양안시기능 검사 해석 도구</h1>
+      <p class="subtitle">학생 배포용 실습 입력 · 해석 프로그램</p><div class="student-only-note">학생 제출용 화면입니다. 검사값 입력, 결과 확인, CSV 다운로드, Google Sheets 제출 기능은 그대로 유지됩니다.</div>
+    </div>
+
+    <div class="layout">
+      <section class="card" id="inputCard">
+        <div class="card-header">
+          <h2>입력 영역</h2>
+          <p>아래 항목을 입력한 뒤 <strong>계산하기</strong>를 누르세요. 입력값은 결과표, CSV 다운로드, Google Sheets 제출에 동일하게 반영됩니다.</p>
+        </div>
+        <div class="form-area">
+          <div class="input-cluster cluster-basic">
+            <div class="section-title" id="section-basic-info">1. 기본 정보</div>
+            <p class="section-desc">이름, 학번, 검사일, 나이, PD를 입력합니다.</p>
+            <div class="grid">
+              <div class="field">
+                <label for="studentName">이름</label>
+                <input id="studentName" type="text" placeholder="예: 홍길동" />
+              </div>
+              <div class="field">
+                <label for="studentId">학번</label>
+                <input id="studentId" type="text" placeholder="예: 20260001" />
+              </div>
+              <div class="field">
+                <label for="examDate">검사일</label>
+                <input id="examDate" type="date" />
+              </div>
+              <div class="field">
+                <label for="age">나이</label>
+                <div class="inline-3">
+                  <input id="age" type="number" step="1" placeholder="예: 22" />
+                  <div class="unit-box">세</div>
+                  <div class="unit-box">AGE</div>
+                </div>
+              </div>
+              <div class="field">
+                <label for="pd">PD</label>
+                <div class="inline-3">
+                  <input id="pd" type="number" step="0.1" placeholder="예: 64" />
+                  <div class="unit-box">mm</div>
+                  <div class="unit-box">PD</div>
+                </div>
+                <div class="hint">계산 시 자동으로 cm로 변환됩니다. 예: 64mm = 6.4cm</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-cluster cluster-phoria">
+            <div class="section-title" id="section-phoria">2. 사위 검사</div>
+            <p class="section-desc">원거리와 근거리 수평 사위를 구분하여 입력합니다.</p>
+            <div class="grid">
+              <div class="field full">
+                <label>원거리 수평 사위</label>
+                <div class="inline-3">
+                  <select id="distPhoriaType" class="phoria-type" data-target="distPhoriaValue">
+                    <option value="XP">XP (Exo)</option>
+                    <option value="EP">EP (Eso)</option>
+                    <option value="Ortho">Ortho</option>
+                  </select>
+                  <input id="distPhoriaValue" type="number" step="0.1" placeholder="예: 2" />
+                  <div class="unit-box">Δ</div>
+                </div>
+                <div class="hint">부호 규칙: XP(Exo) = 음수(-), EP(Eso) = 양수(+), Ortho = 0</div>
+              </div>
+
+              <div class="field full">
+                <label>근거리 수평 사위</label>
+                <div class="inline-3">
+                  <select id="nearPhoriaType" class="phoria-type" data-target="nearPhoriaValue">
+                    <option value="XP">XP (Exo)</option>
+                    <option value="EP">EP (Eso)</option>
+                    <option value="Ortho">Ortho</option>
+                  </select>
+                  <input id="nearPhoriaValue" type="number" step="0.1" placeholder="예: 6" />
+                  <div class="unit-box">Δ</div>
+                </div>
+                <div class="hint">부호 규칙: XP(Exo) = 음수(-), EP(Eso) = 양수(+), Ortho = 0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-cluster cluster-vergence">
+            <div class="section-title" id="section-vergence">3. 융합기능 검사</div>
+            <p class="section-desc">융합버전스, 융합용이성, 폭주근점을 함께 입력합니다.</p>
+            <div class="subsection-stack">
+              <div class="subsection-card">
+                <div class="subsection-title">3-1. 융합버전스</div>
+                <div class="subsection-desc">원거리와 근거리의 BI/BO 값을 구분해 입력합니다.</div>
+                <div class="grid">
+                  <div class="field">
+                    <label for="distBI">원거리 BI break</label>
+                    <div class="inline-3">
+                      <input id="distBI" type="number" step="0.1" placeholder="예: 7" />
+                      <div class="unit-box">Δ</div>
+                      <div class="unit-box">BI</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="distBO">원거리 BO blur</label>
+                    <div class="inline-3">
+                      <input id="distBO" type="number" step="0.1" placeholder="예: 15" />
+                      <div class="unit-box">Δ</div>
+                      <div class="unit-box">BO</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="nearBI">근거리 BI blur</label>
+                    <div class="inline-3">
+                      <input id="nearBI" type="number" step="0.1" placeholder="예: 14" />
+                      <div class="unit-box">Δ</div>
+                      <div class="unit-box">BI</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="nearBO">근거리 BO blur</label>
+                    <div class="inline-3">
+                      <input id="nearBO" type="number" step="0.1" placeholder="예: 20" />
+                      <div class="unit-box">Δ</div>
+                      <div class="unit-box">BO</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection-card">
+                <div class="subsection-title">3-2. 융합용이성</div>
+                <div class="subsection-desc">융합용이성 검사 결과를 입력합니다.</div>
+                <div class="grid">
+                  <div class="field full">
+                    <label for="vergenceFacility">융합용이성 검사 결과</label>
+                    <div class="inline-3">
+                      <input id="vergenceFacility" type="number" step="1" placeholder="예: 12" />
+                      <div class="unit-box">cpm</div>
+                      <div class="unit-box">VF</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection-card">
+                <div class="subsection-title">3-3. 폭주근점</div>
+                <div class="subsection-desc">폭주근점 결과를 입력합니다. NPC break와 recovery를 함께 기록합니다.</div>
+                <div class="grid">
+                  <div class="field">
+                    <label for="npc">NPC break</label>
+                    <div class="inline-3">
+                      <input id="npc" type="number" step="0.1" placeholder="예: 8" />
+                      <div class="unit-box">cm</div>
+                      <div class="unit-box">NPC</div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="npcRecovery">NPC recovery</label>
+                    <div class="inline-3">
+                      <input id="npcRecovery" type="number" step="0.1" placeholder="예: 10" />
+                      <div class="unit-box">cm</div>
+                      <div class="unit-box">REC</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-cluster cluster-accommodation">
+            <div class="section-title" id="section-accommodation">4. 조절기능 검사</div>
+            <p class="section-desc">조절력, 상대조절력, 조절래그, 조절용이성을 구분하여 입력합니다.</p>
+            <div class="subsection-stack">
+              <div class="subsection-card">
+                <div class="subsection-title">4-1. 조절력</div>
+                <div class="subsection-desc">NPA(cm)는 자동으로 AA(D)=100/NPA(cm)로 변환되며, 나이를 입력하면 Hofstetter 공식과 비교됩니다.</div>
+                <div class="grid grid-3">
+                  <div class="field">
+                    <label for="npaOD">NPA 우안</label>
+                    <div class="inline-3">
+                      <input id="npaOD" type="number" step="0.1" placeholder="예: 10" />
+                      <div class="unit-box">cm</div>
+                      <div class="unit-box">OD</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="npaOS">NPA 좌안</label>
+                    <div class="inline-3">
+                      <input id="npaOS" type="number" step="0.1" placeholder="예: 10" />
+                      <div class="unit-box">cm</div>
+                      <div class="unit-box">OS</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="npaOU">NPA 양안</label>
+                    <div class="inline-3">
+                      <input id="npaOU" type="number" step="0.1" placeholder="예: 10" />
+                      <div class="unit-box">cm</div>
+                      <div class="unit-box">OU</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection-card">
+                <div class="subsection-title">4-2. 상대조절력</div>
+                <div class="subsection-desc">NRA와 PRA를 각각 입력합니다.</div>
+                <div class="grid">
+                  <div class="field">
+                    <label for="nra">NRA</label>
+                    <div class="inline-3">
+                      <input id="nra" type="number" step="0.25" placeholder="예: 2.00" />
+                      <div class="unit-box">D</div>
+                      <div class="unit-box">NRA</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="pra">PRA</label>
+                    <div class="inline-3">
+                      <input id="pra" type="number" step="0.25" placeholder="예: -2.25" />
+                      <div class="unit-box">D</div>
+                      <div class="unit-box">PRA</div>
+                    </div>
+                    <div class="hint">예: PRA는 보통 음수값으로 입력합니다.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection-card">
+                <div class="subsection-title">4-3. 조절래그</div>
+                <div class="subsection-desc">단안과 양안 조절래그를 구분해 입력합니다.</div>
+                <div class="grid grid-3">
+                  <div class="field">
+                    <label for="lagOD">조절래그 우안</label>
+                    <div class="inline-3">
+                      <input id="lagOD" type="number" step="0.25" placeholder="예: 0.50" />
+                      <div class="unit-box">D</div>
+                      <div class="unit-box">OD</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="lagOS">조절래그 좌안</label>
+                    <div class="inline-3">
+                      <input id="lagOS" type="number" step="0.25" placeholder="예: 0.50" />
+                      <div class="unit-box">D</div>
+                      <div class="unit-box">OS</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="lagOU">조절래그 양안</label>
+                    <div class="inline-3">
+                      <input id="lagOU" type="number" step="0.25" placeholder="예: 0.50" />
+                      <div class="unit-box">D</div>
+                      <div class="unit-box">OU</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subsection-card">
+                <div class="subsection-title">4-4. 조절용이성</div>
+                <div class="subsection-desc">우안·좌안 MAF와 양안 BAF를 구분해 입력합니다.</div>
+                <div class="grid grid-3">
+                  <div class="field">
+                    <label for="facilityOD">조절용이성 우안(OD, MAF)</label>
+                    <div class="inline-3">
+                      <input id="facilityOD" type="number" step="1" placeholder="예: 11" />
+                      <div class="unit-box">cpm</div>
+                      <div class="unit-box">OD</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="facilityOS">조절용이성 좌안(OS, MAF)</label>
+                    <div class="inline-3">
+                      <input id="facilityOS" type="number" step="1" placeholder="예: 11" />
+                      <div class="unit-box">cpm</div>
+                      <div class="unit-box">OS</div>
+                    </div>
+                  </div>
+
+                  <div class="field">
+                    <label for="facilityOU">조절용이성 양안(OU, BAF)</label>
+                    <div class="inline-3">
+                      <input id="facilityOU" type="number" step="1" placeholder="예: 8" />
+                      <div class="unit-box">cpm</div>
+                      <div class="unit-box">OU</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-primary" id="calcBtn" type="button">계산하기</button>
+            <button class="btn-secondary" id="resetBtn" type="button">초기화</button>
+            <button class="btn-print" id="printBtn" type="button">인쇄</button>
+            <button class="btn-download" id="csvBtn" type="button">엑셀용 CSV 다운로드</button>
+            <button class="btn-submit" id="sheetSubmitBtn" type="button">Google Sheets 제출</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="resultCard">
+        <div class="card-header">
+          <h2>결과 영역</h2>
+          <p>입력한 검사값의 계산 결과, 해석, 기준값 비교표를 표시합니다.</p>
+        </div>
+        <div class="result-area" id="resultArea">
+          <div class="placeholder">
+            <strong>아직 계산되지 않았습니다.</strong><br />
+            좌측 입력란에 검사값을 넣고 <strong>계산하기</strong> 버튼을 누르면 결과가 여기에 표시됩니다.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div><script>(()=>{const mount=document.getElementById('flowchartMount');if(!mount)return;const flowStyle="/* ---------------------------------------------------------\n       \uc591\uc548\uc2dc\uae30\ub2a5 \uac80\uc0ac \ud574\uc11d \ub3c4\uad6c\uc6a9 \ub2e8\uc77c HTML \ud30c\uc77c\n       - \ud559\uc0dd \ubc30\ud3ec\uc6a9\n       - \ubc18\uc751\ud615 \ub808\uc774\uc544\uc6c3\n       - \uce74\ub4dc\ud615 \ud50c\ub85c\uc6b0 \ucc28\ud2b8\n       - \uae30\uc874 \uac80\uc0ac \ud574\uc11d \ub3c4\uad6c\uc640 \uc0c1\ub300\uacbd\ub85c\ub85c \uc5f0\uacb0\ub418\ub294 \ubc84\ud2bc \ud3ec\ud568\n       --------------------------------------------------------- */\n\n    :root {\n      --bg: #f4f8fc;\n      --surface: #ffffff;\n      --surface-soft: #f8fbff;\n      --line: #d8e3ef;\n      --text: #1f2d3d;\n      --muted: #5d6b7a;\n      --primary: #2f80ed;\n      --primary-dark: #1d5fbf;\n      --secondary: #27ae60;\n      --warning: #f2c94c;\n      --danger: #eb5757;\n      --violet: #7b61ff;\n      --shadow: 0 14px 34px rgba(30, 65, 114, 0.10);\n      --radius-xl: 22px;\n      --radius-lg: 18px;\n      --radius-md: 14px;\n      --max-width: 1240px;\n    }\n\n    * {\n      box-sizing: border-box;\n    }\n\n    html {\n      scroll-behavior: smooth;\n    }\n\n    body {\n      margin: 0;\n      font-family: \"Pretendard\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", Arial, sans-serif;\n      background:\n        radial-gradient(circle at top left, rgba(47, 128, 237, 0.08), transparent 28%),\n        radial-gradient(circle at top right, rgba(123, 97, 255, 0.08), transparent 22%),\n        linear-gradient(180deg, #f8fbff 0%, #eef5fb 100%);\n      color: var(--text);\n      line-height: 1.6;\n    }\n\n    a {\n      color: inherit;\n      text-decoration: none;\n    }\n\n    .page {\n      width: min(100% - 28px, var(--max-width));\n      margin: 0 auto;\n      padding: 28px 0 60px;\n    }\n\n    /* \uc0c1\ub2e8 \uc81c\ubaa9 \uc601\uc5ed */\n    .hero {\n      background: linear-gradient(135deg, #1f6fe5 0%, #3f8cff 45%, #6c8cff 100%);\n      color: #fff;\n      border-radius: 30px;\n      padding: 30px 26px;\n      box-shadow: var(--shadow);\n      position: relative;\n      overflow: hidden;\n    }\n\n    .hero::after {\n      content: \"\";\n      position: absolute;\n      inset: auto -40px -55px auto;\n      width: 220px;\n      height: 220px;\n      background: rgba(255, 255, 255, 0.12);\n      border-radius: 50%;\n    }\n\n    .hero-badge {\n      display: inline-flex;\n      align-items: center;\n      gap: 8px;\n      padding: 8px 12px;\n      border-radius: 999px;\n      background: rgba(255, 255, 255, 0.16);\n      border: 1px solid rgba(255, 255, 255, 0.22);\n      font-size: 0.92rem;\n      font-weight: 700;\n      letter-spacing: -0.01em;\n    }\n\n    .hero h1 {\n      margin: 14px 0 10px;\n      font-size: clamp(1.9rem, 2.8vw, 3rem);\n      line-height: 1.2;\n      letter-spacing: -0.03em;\n      position: relative;\n      z-index: 1;\n    }\n\n    .hero p {\n      margin: 0;\n      max-width: 860px;\n      color: rgba(255, 255, 255, 0.95);\n      position: relative;\n      z-index: 1;\n    }\n\n    .hero-actions {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 12px;\n      margin-top: 22px;\n      position: relative;\n      z-index: 1;\n    }\n\n    .hero-actions a,\n    .tool-buttons a,\n    .sticky-actions a {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      gap: 8px;\n      min-height: 46px;\n      padding: 12px 16px;\n      border-radius: 14px;\n      font-weight: 700;\n      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;\n    }\n\n    .btn-primary {\n      background: #fff;\n      color: var(--primary-dark);\n      box-shadow: 0 10px 22px rgba(12, 38, 88, 0.18);\n    }\n\n    .btn-secondary {\n      background: rgba(255, 255, 255, 0.12);\n      color: #fff;\n      border: 1px solid rgba(255, 255, 255, 0.2);\n    }\n\n    .btn-outline {\n      background: #f2f7ff;\n      color: var(--primary-dark);\n      border: 1px solid #cfe0f7;\n    }\n\n    .hero-actions a:hover,\n    .tool-buttons a:hover,\n    .sticky-actions a:hover {\n      transform: translateY(-2px);\n    }\n\n    .section {\n      margin-top: 24px;\n      background: var(--surface);\n      border-radius: var(--radius-xl);\n      box-shadow: var(--shadow);\n      border: 1px solid rgba(216, 227, 239, 0.9);\n      overflow: hidden;\n    }\n\n    .section-header {\n      padding: 22px 24px 8px;\n    }\n\n    .section-header h2 {\n      margin: 0;\n      font-size: clamp(1.2rem, 2vw, 1.7rem);\n      letter-spacing: -0.02em;\n    }\n\n    .section-header p {\n      margin: 8px 0 0;\n      color: var(--muted);\n    }\n\n    .section-body {\n      padding: 0 24px 24px;\n    }\n\n    /* \uc0ac\uc6a9 \ubc29\ubc95 / \uc694\uc57d \uce74\ub4dc */\n    .info-grid {\n      display: grid;\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n      gap: 16px;\n      margin-top: 8px;\n    }\n\n    .info-card {\n      background: var(--surface-soft);\n      border: 1px solid var(--line);\n      border-radius: var(--radius-lg);\n      padding: 18px;\n    }\n\n    .info-card h3 {\n      margin: 0 0 8px;\n      font-size: 1.03rem;\n    }\n\n    .info-card p,\n    .info-card li {\n      color: var(--muted);\n      font-size: 0.97rem;\n    }\n\n    .info-card ul {\n      margin: 10px 0 0;\n      padding-left: 18px;\n    }\n\n    .legend {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 10px;\n      margin-top: 14px;\n    }\n\n    .chip {\n      display: inline-flex;\n      align-items: center;\n      gap: 8px;\n      padding: 7px 12px;\n      border-radius: 999px;\n      font-size: 0.9rem;\n      font-weight: 700;\n      background: #f5f8fc;\n      border: 1px solid var(--line);\n      color: var(--text);\n    }\n\n    .dot {\n      width: 10px;\n      height: 10px;\n      border-radius: 50%;\n      display: inline-block;\n      flex: 0 0 10px;\n    }\n\n    .dot-normal { background: var(--secondary); }\n    .dot-border { background: var(--warning); }\n    .dot-abnormal { background: var(--danger); }\n    .dot-info { background: var(--primary); }\n\n    /* \ud50c\ub85c\uc6b0 \ucc28\ud2b8 \uc601\uc5ed */\n    .flow-wrapper {\n      padding: 4px 24px 28px;\n    }\n\n    .flow-chart {\n      display: grid;\n      grid-template-columns: repeat(7, minmax(200px, 1fr));\n      gap: 18px;\n      align-items: stretch;\n      overflow-x: auto;\n      padding-bottom: 8px;\n    }\n\n    .flow-chart::-webkit-scrollbar {\n      height: 10px;\n    }\n\n    .flow-chart::-webkit-scrollbar-thumb {\n      background: #c9d8ea;\n      border-radius: 999px;\n    }\n\n    .step {\n      position: relative;\n      min-height: 100%;\n      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);\n      border: 1px solid var(--line);\n      border-radius: 24px;\n      padding: 18px;\n      box-shadow: 0 12px 28px rgba(34, 68, 116, 0.08);\n    }\n\n    /* \uce74\ub4dc \uc0ac\uc774\uc758 \ud654\uc0b4\ud45c\ub97c \uac00\uc0c1 \uc694\uc18c\ub85c \ud45c\ud604 */\n    .step:not(:last-child)::after {\n      content: \"\u2192\";\n      position: absolute;\n      top: 50%;\n      right: -14px;\n      transform: translateY(-50%);\n      width: 28px;\n      height: 28px;\n      display: grid;\n      place-items: center;\n      font-weight: 900;\n      color: var(--primary-dark);\n      background: #e8f1ff;\n      border: 1px solid #cdddf6;\n      border-radius: 50%;\n      z-index: 2;\n      box-shadow: 0 8px 18px rgba(47, 128, 237, 0.18);\n    }\n\n    .step-head {\n      display: flex;\n      align-items: flex-start;\n      gap: 12px;\n      margin-bottom: 10px;\n    }\n\n    .step-badge {\n      width: 46px;\n      height: 46px;\n      border-radius: 14px;\n      display: grid;\n      place-items: center;\n      color: #fff;\n      font-weight: 800;\n      font-size: 1rem;\n      flex: 0 0 46px;\n      box-shadow: 0 10px 18px rgba(47, 128, 237, 0.18);\n    }\n\n    .bg-1 { background: linear-gradient(135deg, #2f80ed, #4da3ff); }\n    .bg-2 { background: linear-gradient(135deg, #26a69a, #4cc9b0); }\n    .bg-3 { background: linear-gradient(135deg, #8e44ad, #a569e3); }\n    .bg-4 { background: linear-gradient(135deg, #f2994a, #f7b267); }\n    .bg-5 { background: linear-gradient(135deg, #27ae60, #55c985); }\n    .bg-6 { background: linear-gradient(135deg, #eb5757, #ff7b7b); }\n    .bg-7 { background: linear-gradient(135deg, #34495e, #60758d); }\n\n    .step-title-wrap {\n      min-width: 0;\n    }\n\n    .step-title {\n      margin: 0;\n      font-size: 1.05rem;\n      line-height: 1.35;\n      letter-spacing: -0.02em;\n    }\n\n    .step-subtitle {\n      margin: 4px 0 0;\n      color: var(--muted);\n      font-size: 0.9rem;\n    }\n\n    .student-note {\n      margin: 0 0 12px;\n      padding: 10px 12px;\n      border-radius: 12px;\n      background: #eef6ff;\n      color: #2d5d96;\n      font-size: 0.92rem;\n      border: 1px solid #d6e7fb;\n    }\n\n    .step h4 {\n      margin: 14px 0 8px;\n      font-size: 0.96rem;\n    }\n\n    .step ul {\n      margin: 0;\n      padding-left: 18px;\n      color: var(--muted);\n      font-size: 0.93rem;\n    }\n\n    .step li + li {\n      margin-top: 4px;\n    }\n\n    .mini-box {\n      margin-top: 12px;\n      background: #fbfdff;\n      border: 1px dashed #c8d9ef;\n      border-radius: 14px;\n      padding: 12px;\n      font-size: 0.9rem;\n      color: var(--muted);\n    }\n\n    .status-row {\n      display: flex;\n      flex-wrap: wrap;\n      gap: 8px;\n      margin-top: 12px;\n    }\n\n    .status-pill {\n      display: inline-flex;\n      align-items: center;\n      gap: 7px;\n      padding: 7px 10px;\n      border-radius: 999px;\n      font-size: 0.84rem;\n      font-weight: 700;\n      border: 1px solid transparent;\n    }\n\n    .normal {\n      background: rgba(39, 174, 96, 0.12);\n      color: #1b7b44;\n      border-color: rgba(39, 174, 96, 0.22);\n    }\n\n    .borderline {\n      background: rgba(242, 201, 76, 0.18);\n      color: #936d00;\n      border-color: rgba(242, 201, 76, 0.36);\n    }\n\n    .abnormal {\n      background: rgba(235, 87, 87, 0.12);\n      color: #b63636;\n      border-color: rgba(235, 87, 87, 0.28);\n    }\n\n    /* \uc5f0\uacb0 \ubc84\ud2bc \uc601\uc5ed */\n    .tool-buttons {\n      display: grid;\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n      gap: 14px;\n      margin-top: 18px;\n    }\n\n    .tool-card {\n      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);\n      border: 1px solid var(--line);\n      border-radius: 18px;\n      padding: 18px;\n    }\n\n    .tool-card h3 {\n      margin: 0 0 6px;\n      font-size: 1rem;\n    }\n\n    .tool-card p {\n      margin: 0 0 12px;\n      color: var(--muted);\n      font-size: 0.94rem;\n    }\n\n    /* \uc8fc\uc758\uc0ac\ud56d */\n    .notice-list {\n      margin: 0;\n      padding-left: 18px;\n      color: var(--muted);\n    }\n\n    .notice-list li + li {\n      margin-top: 8px;\n    }\n\n    .highlight-box {\n      margin-top: 16px;\n      padding: 16px 18px;\n      border-radius: 16px;\n      border: 1px solid #dbe7f7;\n      background: linear-gradient(180deg, #f7fbff 0%, #eef6ff 100%);\n    }\n\n    .highlight-box strong {\n      color: var(--primary-dark);\n    }\n\n    /* \ud558\ub2e8 \uace0\uc815\ud615 \ube60\ub978 \uc774\ub3d9 \ubc84\ud2bc */\n    .sticky-actions {\n      position: sticky;\n      bottom: 14px;\n      z-index: 30;\n      margin-top: 24px;\n      display: flex;\n      justify-content: center;\n      pointer-events: none;\n    }\n\n    .sticky-actions-inner {\n      width: min(100%, 760px);\n      display: grid;\n      grid-template-columns: repeat(3, minmax(0, 1fr));\n      gap: 10px;\n      padding: 10px;\n      border-radius: 20px;\n      background: rgba(255, 255, 255, 0.82);\n      backdrop-filter: blur(12px);\n      border: 1px solid rgba(207, 224, 241, 0.9);\n      box-shadow: 0 16px 30px rgba(34, 68, 116, 0.14);\n      pointer-events: auto;\n    }\n\n    .sticky-actions a {\n      background: #f4f8ff;\n      color: var(--primary-dark);\n      border: 1px solid #d7e5f8;\n      font-size: 0.94rem;\n    }\n\n    footer {\n      margin-top: 26px;\n      text-align: center;\n      color: var(--muted);\n      font-size: 0.92rem;\n    }\n\n    /* \ud0dc\ube14\ub9bf \uc774\ud558: \ud50c\ub85c\uc6b0\ub97c \uc138\ub85c\ud615\uc73c\ub85c \uc790\uc5f0\uc2a4\ub7fd\uac8c \uc804\ud658 */\n    @media (max-width: 1180px) {\n      .flow-chart {\n        grid-template-columns: repeat(4, minmax(220px, 1fr));\n      }\n    }\n\n    @media (max-width: 900px) {\n      .info-grid,\n      .tool-buttons,\n      .sticky-actions-inner {\n        grid-template-columns: 1fr;\n      }\n\n      .flow-chart {\n        grid-template-columns: 1fr;\n        overflow: visible;\n      }\n\n      .step:not(:last-child)::after {\n        content: \"\u2193\";\n        top: auto;\n        bottom: -18px;\n        left: 50%;\n        right: auto;\n        transform: translateX(-50%);\n      }\n\n      .hero {\n        padding: 24px 20px;\n        border-radius: 24px;\n      }\n\n      .section-header,\n      .section-body,\n      .flow-wrapper {\n        padding-left: 18px;\n        padding-right: 18px;\n      }\n    }\n\n    @media (max-width: 560px) {\n      .page {\n        width: min(100% - 18px, var(--max-width));\n        padding-top: 18px;\n      }\n\n      .hero h1 {\n        font-size: 1.65rem;\n      }\n\n      .step {\n        padding: 16px;\n      }\n\n      .step-badge {\n        width: 42px;\n        height: 42px;\n        border-radius: 12px;\n      }\n    }\n\n    .step-actions {\n      margin-top: 14px;\n      display: flex;\n      flex-wrap: wrap;\n      gap: 8px;\n    }\n    .step-link {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 42px;\n      width: 100%;\n      padding: 11px 12px;\n      border-radius: 12px;\n      font-size: 0.92rem;\n      font-weight: 800;\n      color: #1d5fbf;\n      background: #eef5ff;\n      border: 1px solid #cfe0f7;\n      box-shadow: 0 8px 18px rgba(47, 128, 237, 0.10);\n    }\n    .step-link:hover {\n      transform: translateY(-1px);\n      background: #e6f0ff;\n    }\n";const flowMarkup="<div class=\"page\">\n    <!-- ===================== \uc0c1\ub2e8 \ud45c\uc9c0 ===================== -->\n    <header class=\"hero\" id=\"top\">\n      <div class=\"hero-badge\">\ud83d\udc41\ufe0f \uc591\uc548\uc2dc\uae30\ub2a5 \uac80\uc0ac \ud574\uc11d \ud559\uc2b5 \uc790\ub8cc</div>\n      <h1>\uc591\uc548\uc2dc\uae30\ub2a5 \uac80\uc0ac \ud574\uc11d \ub3c4\uad6c<br />\uac80\uc0ac \ud50c\ub85c\uc6b0 \ucc28\ud2b8</h1>\n      <p>\n        \ud559\uc0dd\uc774 \uac80\uc0ac \uc21c\uc11c\ub97c \ud55c\ub208\uc5d0 \uc774\ud574\ud558\uace0, \uac80\uc0ac \uacb0\uacfc \uc785\ub825 \u2192 \uae30\uc900\uac12 \ube44\uad50 \u2192 \uc885\ud569 \ubd84\uc11d \u2192 \ucc98\uce58 \ucd94\ucc9c\uae4c\uc9c0\uc758 \ud750\ub984\uc744\n        \ub2e8\uacc4\ubcc4\ub85c \ub530\ub77c\uac08 \uc218 \uc788\ub3c4\ub85d \uad6c\uc131\ud55c \uad50\uc721\uc6a9 \ud654\uba74\uc785\ub2c8\ub2e4. \uc591\uc548\uc2dc, \uc2dc\uae30\ub2a5 \ubd84\uc11d, \uc548\uacbd \ucc98\ubc29 \ud310\ub2e8, \uc548\uacbd\uc870\uc81c\uac00\uacf5 \uc804\ud6c4\n        \ud655\uc778 \uad50\uc721\uacfc \uc790\uc5f0\uc2a4\ub7fd\uac8c \uc5f0\uacb0\ub418\ub3c4\ub85d \uc124\uba85\uc744 \ud3ec\ud568\ud588\uc2b5\ub2c8\ub2e4.\n      </p>\n      <div class=\"hero-actions\">\n        <!-- \uae30\uc874 \uac80\uc0ac \ud574\uc11d \ub3c4\uad6c HTML \ud30c\uc77c\ub85c \uc5f0\uacb0\ub418\ub294 \ubc84\ud2bc -->\n        <a class=\"btn-primary\" href=\"#section-basic-info\">\uac80\uc0ac \uc785\ub825 \ud654\uba74\uc73c\ub85c \uc774\ub3d9</a>\n        <a class=\"btn-secondary\" href=\"#flow-chart\">\uac80\uc0ac \ud750\ub984 \ubc14\ub85c \ubcf4\uae30</a>\n        <a class=\"btn-secondary\" href=\"#notice\">\uc8fc\uc758\uc0ac\ud56d \ubcf4\uae30</a>\n      </div>\n    </header>\n\n    <!-- ===================== \uc0ac\uc6a9 \ubc29\ubc95 ===================== -->\n    <section class=\"section\" aria-labelledby=\"usage-title\">\n      <div class=\"section-header\">\n        <h2 id=\"usage-title\">1. \uc0ac\uc6a9 \ubc29\ubc95</h2>\n        <p>\uc218\uc5c5 \uc804 \uc608\uc2b5, \uc2e4\uc2b5 \uc911 \uc21c\uc11c \ud655\uc778, \uac80\uc0ac \ud6c4 \ud574\uc11d \uc5f0\uc2b5, \ucc98\ubc29 \ud1a0\uc758 \uc790\ub8cc\ub85c \ubc14\ub85c \ud65c\uc6a9\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.</p>\n      </div>\n      <div class=\"section-body\">\n        <div class=\"info-grid\">\n          <article class=\"info-card\">\n            <h3>\u2460 \uc21c\uc11c \uc774\ud574</h3>\n            <p>\n              \uba3c\uc800 \uc804\uccb4 \ud750\ub984\uc744 \ud655\uc778\ud55c \ub4a4, \uac01 \uac80\uc0ac \ub2e8\uacc4\uac00 \uc65c \ud544\uc694\ud55c\uc9c0 \uc774\ud574\ud569\ub2c8\ub2e4. \ud559\uc0dd\uc740 \ub2e8\uacc4\ubcc4 \uce74\ub4dc\uc758 \uc9e7\uc740 \uc124\uba85\uc744 \ub530\ub77c\uac00\uba70\n              \uac80\uc0ac \ubaa9\uc801\uacfc \ud310\ub3c5 \ubc29\ud5a5\uc744 \uc815\ub9ac\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.\n            </p>\n          </article>\n          <article class=\"info-card\">\n            <h3>\u2461 \uacb0\uacfc \uc785\ub825 \uc5f0\uc2b5</h3>\n            <p>\n              \uc0ac\uc704, \uc735\ud569\ubc84\uc804\uc2a4, \uc870\uc808\uac80\uc0ac\ub97c \uc785\ub825\ud588\ub2e4\uace0 \uac00\uc815\ud558\uace0 \uae30\uc900\uac12\uacfc \ube44\uad50\ud558\ub294 \uc5f0\uc2b5\uc744 \ud569\ub2c8\ub2e4. \uc785\ub825\uac12\uc740 \uc2e4\uc81c \ud504\ub85c\uadf8\ub7a8\uc5d0\n              \ub123\uae30 \uc804 \uc885\uc774\uc5d0 \uba3c\uc800 \uc815\ub9ac\ud574\ub3c4 \uc88b\uc2b5\ub2c8\ub2e4.\n            </p>\n          </article>\n          <article class=\"info-card\">\n            <h3>\u2462 \ud574\uc11d\uacfc \ucc98\uce58 \uc5f0\uacb0</h3>\n            <p>\n              \ub2e8\uc21c\ud788 \uc815\uc0c1/\uc774\uc0c1 \ud310\uc815\uc5d0 \uadf8\uce58\uc9c0 \uc54a\uace0, \uc7ac\uac80\u00b7\ucd94\uac00\uac80\uc0ac\u00b7\uc2dc\uae30\ub2a5 \ud6c8\ub828\u00b7\ub80c\uc988 \ucc98\ubc29 \uace0\ub824\u00b7\uc804\ubb38\uae30\uad00 \uc758\ub8b0\uae4c\uc9c0 \uc784\uc0c1\uc801\n              \ud310\ub2e8 \ud750\ub984\uc744 \uc5f0\uacb0\ud574\uc11c \ud559\uc2b5\ud569\ub2c8\ub2e4.\n            </p>\n          </article>\n        </div>\n\n        <div class=\"legend\" aria-label=\"\uc0c1\ud0dc \ud45c\uc2dc \ubc94\ub840\">\n          <span class=\"chip\"><span class=\"dot dot-normal\"></span>\uc815\uc0c1</span>\n          <span class=\"chip\"><span class=\"dot dot-border\"></span>\uacbd\uacc4</span>\n          <span class=\"chip\"><span class=\"dot dot-abnormal\"></span>\uc774\uc0c1</span>\n          <span class=\"chip\"><span class=\"dot dot-info\"></span>\uc785\ub825\uac12 \ud574\uc11d \uc548\ub0b4</span>\n        </div>\n      </div>\n    </section>\n\n    <!-- ===================== \uac80\uc0ac \ud750\ub984 \uc694\uc57d ===================== -->\n    <section class=\"section\" aria-labelledby=\"summary-title\">\n      <div class=\"section-header\">\n        <h2 id=\"summary-title\">2. \uac80\uc0ac \ud750\ub984 \uc694\uc57d</h2>\n        <p>\uae30\ucd08 \uc815\ubcf4 \ud655\uc778 \ud6c4 \uc591\uc548\uc2dc\uc640 \uc870\uc808 \uad00\ub828 \ud575\uc2ec \uac80\uc0ac\ub97c \uc21c\uc11c\ub300\ub85c \uc815\ub9ac\ud558\uace0, \ub9c8\uc9c0\ub9c9\uc5d0 \ucc98\ubc29 \ubc0f \uad50\uc721\uc801 \ud310\ub2e8\uc73c\ub85c \uc5f0\uacb0\ud569\ub2c8\ub2e4.</p>\n      </div>\n      <div class=\"section-body\">\n        <div class=\"info-grid\">\n          <article class=\"info-card\">\n            <h3>\uc785\ub825 \ub2e8\uacc4</h3>\n            <ul>\n              <li>\uae30\ubcf8\uc815\ubcf4\uc640 \uc8fc\uc99d\uc0c1\uc744 \uba3c\uc800 \uae30\ub85d\ud569\ub2c8\ub2e4.</li>\n              <li>\uc548\uc704\uac80\uc0ac\uc5d0\uc11c \uc6d0\uac70\ub9ac\u00b7\uadfc\uac70\ub9ac \uc0ac\uc704\ub97c \ud30c\uc545\ud569\ub2c8\ub2e4.</li>\n              <li>\uc735\ud569\ubc84\uc804\uc2a4\uc640 \uc870\uc808\uac80\uc0ac\ub97c \ud1b5\ud574 \uae30\ub2a5\uc801 \ubcf4\uc0c1 \uac00\ub2a5\uc131\uc744 \ubd05\ub2c8\ub2e4.</li>\n            </ul>\n          </article>\n          <article class=\"info-card\">\n            <h3>\ud574\uc11d \ub2e8\uacc4</h3>\n            <ul>\n              <li>Morgan \uae30\uc900 \ub610\ub294 \uc218\uc815 \uae30\uc900\uacfc \ube44\uad50\ud569\ub2c8\ub2e4.</li>\n              <li>\uc815\uc0c1\u00b7\uacbd\uacc4\u00b7\uc774\uc0c1\uc73c\ub85c \uc2dc\uac01\ud654\ud574 \ud559\uc0dd\uc774 \uc989\uc2dc \uc774\ud574\ud558\ub3c4\ub85d \ud569\ub2c8\ub2e4.</li>\n              <li>\uac80\uc0ac \uac04 \uc77c\uce58/\ubd88\uc77c\uce58\ub97c \uc885\ud569\ud558\uc5ec \uc9c4\ub2e8\uc801 \ucd94\uc815\uc744 \uc815\ub9ac\ud569\ub2c8\ub2e4.</li>\n            </ul>\n          </article>\n          <article class=\"info-card\">\n            <h3>\uad50\uc721 \uc5f0\uacb0</h3>\n            <ul>\n              <li>\ub80c\uc988 \ucc98\ubc29 \ud310\ub2e8\uacfc \uc2dc\uae30\ub2a5 \ud6c8\ub828 \uace0\ub824\ub97c \uc5f0\uacb0\ud569\ub2c8\ub2e4.</li>\n              <li>\uc548\uacbd\uc870\uc81c\uac00\uacf5 \uc804\ud6c4 \uc801\uc751 \ubb38\uc81c\uc640 \uc7ac\ud3c9\uac00 \ud544\uc694\uc131\uc744 \ud1a0\uc758\ud569\ub2c8\ub2e4.</li>\n              <li>\ud559\uc0dd\uc774 \uac80\uc0ac \uacb0\uacfc\ub97c \uc2e4\uc81c \uc784\uc0c1 \uc124\uba85 \ubb38\uc7a5\uc73c\ub85c \ubc14\uafb8\ub294 \uc5f0\uc2b5\uc744 \ud569\ub2c8\ub2e4.</li>\n            </ul>\n          </article>\n        </div>\n      </div>\n    </section>\n\n    <!-- ===================== \ud50c\ub85c\uc6b0 \ucc28\ud2b8 ===================== -->\n    <section class=\"section\" id=\"flow-chart\" aria-labelledby=\"flow-title\">\n      <div class=\"section-header\">\n        <h2 id=\"flow-title\">3. \uac80\uc0ac \ud50c\ub85c\uc6b0 \ucc28\ud2b8</h2>\n        <p>\uce74\ub4dc\ud615 \ub2e8\uacc4 \uad6c\uc870\ub85c \uac80\uc0ac \uc21c\uc11c\ub97c \uc2dc\uac01\ud654\ud588\uc2b5\ub2c8\ub2e4. PC\uc5d0\uc11c\ub294 \uac00\ub85c \ud750\ub984, \ubaa8\ubc14\uc77c\uc5d0\uc11c\ub294 \uc138\ub85c \ud750\ub984\uc73c\ub85c \uc790\uc5f0\uc2a4\ub7fd\uac8c \uc804\ud658\ub429\ub2c8\ub2e4.</p>\n      </div>\n      <div class=\"flow-wrapper\">\n        <div class=\"flow-chart\" role=\"list\">\n          <!-- STEP 1 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step1-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-1\">1</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step1-title\">\uae30\ubcf8\uc815\ubcf4 \uc785\ub825</h3>\n                <p class=\"step-subtitle\">\uc774\ub984 \u00b7 \ud559\ubc88 \u00b7 \uac80\uc0ac\uc77c \u00b7 \uc8fc\uc99d\uc0c1</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \uac80\uc0ac \uc804\uc5d0 \ud658\uc790 \ub610\ub294 \uc2e4\uc2b5 \ub300\uc0c1\uc790\uc758 \uae30\ubcf8\uc815\ubcf4\uc640 \ubd88\ud3b8\uac10\uc744 \uba3c\uc800 \uc815\ub9ac\ud569\ub2c8\ub2e4.</p>\n            <h4>\uc785\ub825 \ud56d\ubaa9</h4>\n            <ul>\n              <li>\uc774\ub984 / \ud559\ubc88 / \uac80\uc0ac\uc77c</li>\n              <li>\uc8fc\uc99d\uc0c1 \ub610\ub294 \ubd88\ud3b8\uac10</li>\n              <li>\uc608: \uadfc\uac70\ub9ac \ud750\ub9bc, \ubcf5\uc2dc \ub290\ub08c, \ub208\ud53c\ub85c, \ub3c5\uc11c \uc2dc \uc9d1\uc911 \uc800\ud558</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uad50\uc721 \ud3ec\uc778\ud2b8:</strong> \uc8fc\uc99d\uc0c1\uc740 \uac80\uc0ac \ud574\uc11d\uc758 \ucd9c\ubc1c\uc810\uc785\ub2c8\ub2e4. \uc218\uce58\uac00 \uacbd\uacc4 \uc218\uc900\uc774\uc5b4\ub3c4 \uc99d\uc0c1\uacfc \uc77c\uce58\ud558\uba74 \ucc98\ubc29 \ud310\ub2e8\uc5d0\n              \uc911\uc694\ud55c \ub2e8\uc11c\uac00 \ub429\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-basic-info\">\uae30\ubcf8\uc815\ubcf4 \uc785\ub825\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 2 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step2-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-2\">2</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step2-title\">\uc548\uc704\uac80\uc0ac</h3>\n                <p class=\"step-subtitle\">\uc6d0\uac70\ub9ac \uc0ac\uc704 \u00b7 \uadfc\uac70\ub9ac \uc0ac\uc704</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \uba3c\uc800 \ub208\uc758 \uae30\ubcf8 \uc815\ub82c \uc0c1\ud0dc\ub97c \ud655\uc778\ud558\uace0, \uc6d0\uac70\ub9ac\uc640 \uadfc\uac70\ub9ac\uc5d0\uc11c \ubc29\ud5a5 \ucc28\uc774\uac00 \uc788\ub294\uc9c0 \ubd05\ub2c8\ub2e4.</p>\n            <h4>\uc785\ub825 \ubc29\uc2dd</h4>\n            <ul>\n              <li>XP / EP \ub610\ub294 Exo / Eso \ubaa8\ub450 \ud5c8\uc6a9</li>\n              <li>XP / Exo = \uc678\uc0ac\uc704</li>\n              <li>EP / Eso = \ub0b4\uc0ac\uc704</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uc784\uc0c1 \ud574\uc11d \ud3ec\uc778\ud2b8:</strong> \uc6d0\uac70\ub9ac\uc640 \uadfc\uac70\ub9ac\uc758 \uc0ac\uc704 \ubc29\ud5a5 \ubc0f \uc591\uc758 \ucc28\uc774\ub97c \ubcf4\uba74, \uc774\ud6c4 \uc735\ud569\ubc84\uc804\uc2a4\uc640 \uc870\uc808\uac80\uc0ac\uc5d0\uc11c \uc5b4\ub5a4\n              \ubcf4\uc0c1 \ubd80\ub2f4\uc774 \uac78\ub9ac\ub294\uc9c0 \uc608\uce21\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-phoria\">\uc548\uc704\uac80\uc0ac \uc785\ub825\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 3 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step3-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-3\">3</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step3-title\">\uc735\ud569\ubc84\uc804\uc2a4 \uac80\uc0ac</h3>\n                <p class=\"step-subtitle\">BO \u00b7 BI / \uc6d0\uac70\ub9ac \u00b7 \uadfc\uac70\ub9ac / Blur \u00b7 Break \u00b7 Recovery</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \uc0ac\uc704\ub97c \ubcf4\uc0c1\ud560 \uc218 \uc788\ub294 \uc735\ud569 \ub2a5\ub825\uc774 \ucda9\ubd84\ud55c\uc9c0 \ud655\uc778\ud558\ub294 \ub2e8\uacc4\uc785\ub2c8\ub2e4.</p>\n            <h4>\ud655\uc778 \ud56d\ubaa9</h4>\n            <ul>\n              <li>BO, BI \uac12\uc744 \uc6d0\uac70\ub9ac\uc640 \uadfc\uac70\ub9ac\ub85c \uad6c\ubd84</li>\n              <li>Blur / Break / Recovery \uc21c\uc11c \uc785\ub825</li>\n              <li>\uac12\uc774 \ub0ae\uac70\ub098 \ud68c\ubcf5\uc774 \ub2a6\uc73c\uba74 \ubcf4\uc0c1 \ub2a5\ub825 \uc800\ud558 \uac00\ub2a5\uc131 \uace0\ub824</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uad50\uc721 \uc5f0\uacb0:</strong> \uc0ac\uc704\uac00 \uc788\uc5b4\ub3c4 \uc735\ud569\ubc84\uc804\uc2a4\uac00 \ucda9\ubd84\ud558\uba74 \uc99d\uc0c1\uc774 \uc801\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4. \ubc18\ub300\ub85c \uc0ac\uc704\uac00 \ud06c\uc9c0 \uc54a\uc544\ub3c4 \uc735\ud569\n              \uc5ec\ub825\uc774 \ubd80\uc871\ud558\uba74 \ubd88\ud3b8\uac10\uc774 \ucee4\uc9c8 \uc218 \uc788\uc74c\uc744 \ud1a0\uc758\ud569\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-vergence\">\uc735\ud569\ubc84\uc804\uc2a4 \uc785\ub825\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 4 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step4-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-4\">4</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step4-title\">\uc870\uc808\uac80\uc0ac</h3>\n                <p class=\"step-subtitle\">NRA/PRA \u00b7 \uc870\uc808\uadfc\uc810 \u00b7 \uc870\uc808\uc6a9\uc774\uc131 \u00b7 \uc0c1\ub300\uc870\uc808 \u00b7 \ub2e8\uc548/\uc591\uc548 \uc870\uc808</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \uc735\ud569 \ubb38\uc81c\ub9cc \ubcfc \uac83\uc774 \uc544\ub2c8\ub77c \uc870\uc808 \uae30\ub2a5\ub3c4 \ud568\uaed8 \ud655\uc778\ud574\uc57c \uac80\uc0ac \ud574\uc11d\uc774 \uade0\ud615\uc744 \uc774\ub8f9\ub2c8\ub2e4.</p>\n            <h4>\ud575\uc2ec \uc785\ub825</h4>\n            <ul>\n              <li>NRA / PRA</li>\n              <li>\uc870\uc808\uadfc\uc810(AA \ub610\ub294 NPC\uc640 \ud63c\ub3d9\ud558\uc9c0 \uc54a\ub3c4\ub85d \uad6c\ubd84)</li>\n              <li>\uc870\uc808\uc6a9\uc774\uc131(MAF / BAF)</li>\n              <li>\uc0c1\ub300\uc870\uc808, \ub2e8\uc548 \ubc0f \uc591\uc548 \uc870\uc808 \uacb0\uacfc</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uc784\uc0c1 \ud574\uc11d \ud3ec\uc778\ud2b8:</strong> \uc870\uc808\ubd80\uc871, \uc870\uc808\uacfc\ub2e4, \uc870\uc808\uc6a9\uc774\uc131 \uc800\ud558 \uc5ec\ubd80\ub294 \uadfc\uac70\ub9ac \ubd88\ud3b8\uac10\uacfc \ucc98\ubc29 \ud310\ub2e8\uc5d0 \uc9c1\uc811 \uc5f0\uacb0\ub429\ub2c8\ub2e4.\n              \uadfc\uc6a9 \uac00\uc785\ub3c4, \uc791\uc5c5\uac70\ub9ac \uc9c0\ub3c4, \uc2dc\uae30\ub2a5 \ud6c8\ub828 \uacc4\ud68d\uc744 \ud568\uaed8 \uc0dd\uac01\ud574 \ubd05\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-accommodation\">\uc870\uc808\uac80\uc0ac \uc785\ub825\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 5 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step5-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-5\">5</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step5-title\">\uae30\uc900\uac12 \ube44\uad50</h3>\n                <p class=\"step-subtitle\">Morgan \uae30\uc900 \ub610\ub294 \uc0ac\uc6a9\uc790 \uc218\uc815 \uae30\uc900</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \uce21\uc815\uac12\uc744 \uae30\uc900\uacfc \ube44\uad50\ud574 \uc815\uc0c1\uc778\uc9c0, \uacbd\uacc4\uc778\uc9c0, \uc774\uc0c1\uc778\uc9c0 \uba3c\uc800 \ubd84\ub958\ud569\ub2c8\ub2e4.</p>\n            <h4>\ube44\uad50 \ubc29\uc2dd</h4>\n            <ul>\n              <li>Morgan \uae30\uc900 \uc0ac\uc6a9 \uac00\ub2a5</li>\n              <li>\uc218\uc5c5\uc6a9\u00b7\uae30\uad00\uc6a9 \uae30\uc900\uc73c\ub85c \uc218\uc815 \uac00\ub2a5</li>\n              <li>\uacb0\uacfc\ub294 \uc0c9\uc0c1\uc73c\ub85c \uad6c\ubd84\ud574 \uc989\uc2dc \uc774\ud574</li>\n            </ul>\n            <div class=\"status-row\" aria-label=\"\uc0c1\ud0dc \uc608\uc2dc\">\n              <span class=\"status-pill normal\">\u25cf \uc815\uc0c1</span>\n              <span class=\"status-pill borderline\">\u25cf \uacbd\uacc4</span>\n              <span class=\"status-pill abnormal\">\u25cf \uc774\uc0c1</span>\n            </div>\n            <div class=\"mini-box\">\n              <strong>\uad50\uc721 \ud3ec\uc778\ud2b8:</strong> \uae30\uc900\uac12\uc740 \ucc38\uace0\ud2c0\uc785\ub2c8\ub2e4. \uc2e4\uc81c \ud574\uc11d\uc5d0\uc11c\ub294 \uc5f0\ub839, \uc99d\uc0c1, \uc9c1\uc5c5\uc801 \uc2dc\ud658\uacbd, \uac80\uc0ac \uc2e0\ub8b0\ub3c4\ub97c \ud568\uaed8 \uace0\ub824\ud574\uc57c \ud569\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-criteria\">\uae30\uc900\uac12 \ube44\uad50\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 6 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step6-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-6\">6</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step6-title\">\uc885\ud569 \ubd84\uc11d</h3>\n                <p class=\"step-subtitle\">\ubc29\ud5a5\uc131 \u00b7 \ubd80\uc871 \uc5ec\ubd80 \u00b7 \ubd88\uc77c\uce58 \ud655\uc778</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \ud55c \uac80\uc0ac\ub9cc \ubcf4\uc9c0 \ub9d0\uace0 \uc804\uccb4 \uac80\uc0ac \uacb0\uacfc\uac00 \uc11c\ub85c \ub9de\ubb3c\ub9ac\ub294\uc9c0 \uc885\ud569\ud574\uc11c \ud574\uc11d\ud569\ub2c8\ub2e4.</p>\n            <h4>\ubd84\uc11d \ud56d\ubaa9</h4>\n            <ul>\n              <li>\uc0ac\uc704 \ubc29\ud5a5: \uc678\uc0ac\uc704 / \ub0b4\uc0ac\uc704 \uacbd\ud5a5</li>\n              <li>\uc735\ud569\ubc84\uc804\uc2a4 \ubd80\uc871 \uac00\ub2a5\uc131</li>\n              <li>\uc870\uc808 \ubd80\uc871 / \uacfc\ub2e4 / \uc6a9\uc774\uc131 \uc800\ud558 \uac00\ub2a5\uc131</li>\n              <li>\uac80\uc0ac \uac04 \ubd88\uc77c\uce58 \uc5ec\ubd80 \ud45c\uc2dc</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uc784\uc0c1\uc801 \uc8fc\uc758:</strong> \uc608\ub97c \ub4e4\uc5b4 \uadfc\uac70\ub9ac \uc678\uc0ac\uc704\uc778\ub370 BO \uadfc\uac70\ub9ac \uac12\uc774 \ucda9\ubd84\ud558\uc9c0 \uc54a\uace0 BAF\ub3c4 \uc800\ud558\ub418\uc5b4 \uc788\uc73c\uba74, \ub2e8\uc21c \uc0ac\uc704\ubcf4\ub2e4\n              \ubcf5\ud569\uc801\uc778 \uc2dc\uae30\ub2a5 \ubb38\uc81c\ub85c \uc811\uadfc\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4. \ubc18\ub300\ub85c \uac80\uc0ac \uac04 \uacb0\uacfc\uac00 \uc5b4\uae0b\ub098\uba74 \uc7ac\uac80\uacfc \ud658\uacbd \ud655\uc778\uc774 \uc6b0\uc120\uc785\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-analysis\">\uc885\ud569 \ubd84\uc11d\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n\n          <!-- STEP 7 -->\n          <article class=\"step\" role=\"listitem\" aria-labelledby=\"step7-title\">\n            <div class=\"step-head\">\n              <div class=\"step-badge bg-7\">7</div>\n              <div class=\"step-title-wrap\">\n                <h3 class=\"step-title\" id=\"step7-title\">\ucc98\uce58 \ucd94\ucc9c</h3>\n                <p class=\"step-subtitle\">\uc7ac\uac80 \u00b7 \ucd94\uac00\uac80\uc0ac \u00b7 \ud6c8\ub828 \u00b7 \ub80c\uc988 \u00b7 \uc758\ub8b0</p>\n              </div>\n            </div>\n            <p class=\"student-note\">\ud559\uc0dd\uc6a9 \uc548\ub0b4: \ud574\uc11d\uc758 \ub05d\uc740 \ud310\uc815\uc774 \uc544\ub2c8\ub77c, \ub2e4\uc74c\uc5d0 \ubb34\uc5c7\uc744 \ud560\uc9c0 \uacb0\uc815\ud558\ub294 \uac83\uc785\ub2c8\ub2e4.</p>\n            <h4>\ucd94\ucc9c \ud56d\ubaa9</h4>\n            <ul>\n              <li>\uc7ac\uac80 \ud544\uc694</li>\n              <li>\ucd94\uac00\uac80\uc0ac \ud544\uc694</li>\n              <li>\uc2dc\uae30\ub2a5 \ud6c8\ub828 \uace0\ub824</li>\n              <li>\ub80c\uc988 \ucc98\ubc29 \uace0\ub824</li>\n              <li>\uc804\ubb38\uae30\uad00 \uc758\ub8b0 \uace0\ub824</li>\n            </ul>\n            <div class=\"mini-box\">\n              <strong>\uc548\uacbd\uc0ac \uad50\uc721 \uc5f0\uacb0:</strong> \ub80c\uc988 \ucc98\ubc29 \ud310\ub2e8 \uc2dc \uad74\uc808\uc774\uc0c1 \ubcf4\uc815\ubfd0 \uc544\ub2c8\ub77c \uc591\uc548\uc2dc \uc801\uc751 \uac00\ub2a5\uc131, \uadfc\uac70\ub9ac \uc791\uc5c5 \ubd80\ub2f4,\n              \uc548\uacbd\uc870\uc81c\uac00\uacf5 \ud6c4 \ucc29\uc6a9 \ubd88\ud3b8 \uac00\ub2a5\uc131\uae4c\uc9c0 \ud568\uaed8 \uc124\uba85\ud558\ub294 \uc5f0\uc2b5\uc744 \uad8c\uc7a5\ud569\ub2c8\ub2e4.\n            </div>\n            <div class=\"step-actions\">\n              <a class=\"step-link\" href=\"#section-treatment\">\ucc98\uce58 \ucd94\ucc9c\uc73c\ub85c \uc774\ub3d9</a>\n            </div>\n          </article>\n        </div>\n      </div>\n    </section>\n\n    <!-- ===================== \uc5f0\uacb0 \ubc84\ud2bc UI ===================== -->\n    <section class=\"section\" id=\"tool-links\" aria-labelledby=\"tool-title\">\n      <div class=\"section-header\">\n        <h2 id=\"tool-title\">4. \ub3c4\uad6c \uc5f0\uacb0 \ubc84\ud2bc</h2>\n        <p>\uc544\ub798 \ubc84\ud2bc\uc744 \ub204\ub974\uba74 \uac19\uc740 \ud398\uc774\uc9c0 \uc548\uc758 \uc2e4\uc81c \ud574\uc11d \ub3c4\uad6c \uc785\ub825 \uc601\uc5ed \ub610\ub294 \uacb0\uacfc \ubd84\uc11d \uc601\uc5ed\uc73c\ub85c \uc815\ud655\ud788 \uc774\ub3d9\ud569\ub2c8\ub2e4.</p>\n      </div>\n      <div class=\"section-body\">\n        <div class=\"tool-buttons\">\n          <article class=\"tool-card\">\n            <h3>\uac80\uc0ac \uc785\ub825 \ud654\uba74</h3>\n            <p>\uae30\ubcf8\uc815\ubcf4, \uc0ac\uc704, \uc735\ud569\ubc84\uc804\uc2a4, \uc870\uc808\uac80\uc0ac \uc785\ub825 \uc601\uc5ed\uc73c\ub85c \uc774\uc5b4\uc9c0\ub294 \ucd9c\ubc1c\uc810\uc785\ub2c8\ub2e4.</p>\n            <a href=\"#section-basic-info\" class=\"btn-outline\">\uac80\uc0ac \uc785\ub825 \ud654\uba74\uc73c\ub85c \uc774\ub3d9</a>\n          </article>\n          <article class=\"tool-card\">\n            <h3>\ubd84\uc11d \uacb0\uacfc \ubcf4\uae30</h3>\n            <p>\uacc4\uc0b0 \ud6c4 \uae30\uc900\uac12 \ube44\uad50\ud45c\uc640 \uc885\ud569 \ubd84\uc11d \uacb0\uacfc\ub97c \ud655\uc778\ud558\ub294 \uc704\uce58\ub85c \uc774\ub3d9\ud569\ub2c8\ub2e4.</p>\n            <a href=\"#section-analysis\" class=\"btn-outline\">\ubd84\uc11d \uacb0\uacfc \ubcf4\uae30</a>\n          </article>\n          <article class=\"tool-card\">\n            <h3>\ucc98\uce58 \ucd94\ucc9c \ubcf4\uae30</h3>\n            <p>\uad50\uc721\uc6a9 \ucc98\uce58 \ubc29\ud5a5 \uc608\uc2dc\uc640 \ud6c4\uc18d \uc870\uce58 \uac80\ud1a0 \uc601\uc5ed\uc73c\ub85c \uc774\ub3d9\ud569\ub2c8\ub2e4.</p>\n            <a href=\"#section-treatment\" class=\"btn-outline\">\ucc98\uce58 \ucd94\ucc9c \ubcf4\uae30</a>\n          </article>\n        </div>\n\n        <div class=\"highlight-box\">\n          <strong>\ud65c\uc6a9 \uc608\uc2dc:</strong> \uc218\uc5c5\uc5d0\uc11c\ub294 \uc774 \ubc84\ud2bc\uc744 \uae30\uc900\uc73c\ub85c \u201c\uc785\ub825 \u2192 \ud574\uc11d \u2192 \uc124\uba85 \u2192 \ucc98\ubc29 \ud310\ub2e8\u201d\uc758 \ubc1c\ud45c \uc21c\uc11c\ub97c \uc815\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.\n          \uc2e4\uc2b5 \ud3c9\uac00 \uc2dc\uc5d0\ub294 \ud559\uc0dd\uc774 \uac80\uc0ac\uac12\uc744 \uc77d\uace0, \uc5b4\ub5a4 \ubc84\ud2bc\uc758 \ub2e8\uacc4\uc5d0\uc11c \uc5b4\ub5a4 \uacb0\ub860\uc744 \ub0b4\ub9ac\ub294\uc9c0 \ub9d0\ub85c \uc124\uba85\ud558\uac8c \ud558\uba74 \uad50\uc721 \ud6a8\uacfc\uac00 \ub192\uc544\uc9d1\ub2c8\ub2e4.\n        </div>\n      </div>\n    </section>\n\n    <!-- ===================== \uc8fc\uc758\uc0ac\ud56d ===================== -->\n    <section class=\"section\" id=\"notice\" aria-labelledby=\"notice-title\">\n      <div class=\"section-header\">\n        <h2 id=\"notice-title\">5. \uc8fc\uc758\uc0ac\ud56d</h2>\n        <p>\ud559\uc0dd\uc6a9 \ubc30\ud3ec \uc790\ub8cc\uc774\uc9c0\ub9cc, \uc784\uc0c1\uc801\uc73c\ub85c \uc5b4\uc0c9\ud558\uc9c0 \uc54a\ub3c4\ub85d \uac80\uc0ac \ud574\uc11d \uc2dc \uc720\uc758\ud560 \uc810\uc744 \ud568\uaed8 \uc81c\uc2dc\ud569\ub2c8\ub2e4.</p>\n      </div>\n      <div class=\"section-body\">\n        <ul class=\"notice-list\">\n          <li>\uac80\uc0ac\uac12 \ud558\ub098\ub9cc\uc73c\ub85c \uacb0\ub860\uc744 \ub0b4\ub9ac\uc9c0 \ub9d0\uace0, \uc8fc\uc99d\uc0c1\u00b7\uac80\uc0ac \uc2e0\ub8b0\ub3c4\u00b7\ubc18\ubcf5 \uce21\uc815 \uacb0\uacfc\ub97c \ud568\uaed8 \ud655\uc778\ud569\ub2c8\ub2e4.</li>\n          <li>\uc0ac\uc704 \uacb0\uacfc\uc640 \uc735\ud569\ubc84\uc804\uc2a4, \uc870\uc808\uac80\uc0ac \uacb0\uacfc\uac00 \uc11c\ub85c \ub9de\uc9c0 \uc54a\uc73c\uba74 \uce21\uc815\uc624\ucc28, \uc774\ud574 \ubd80\uc871, \ud53c\uac80\uc0ac\uc790 \ud611\uc870\ub3c4 \ubb38\uc81c\ub97c \uace0\ub824\ud574 \uc7ac\uac80\ud569\ub2c8\ub2e4.</li>\n          <li>\ucc98\ubc29 \ud310\ub2e8\uc740 \uad74\uc808\uc774\uc0c1 \ubcf4\uc815\ub9cc\uc774 \uc544\ub2c8\ub77c \uc591\uc548\uc2dc \uc801\uc751, \uadfc\uac70\ub9ac \uc791\uc5c5 \ud658\uacbd, \uc548\uacbd \ucc29\uc6a9 \ud6c4 \ubd88\ud3b8 \uac00\ub2a5\uc131\uae4c\uc9c0 \ud3ec\ud568\ud574\uc57c \ud569\ub2c8\ub2e4.</li>\n          <li>\uc548\uacbd\uc870\uc81c\uac00\uacf5 \uad50\uc721\uacfc \uc5f0\uacb0\ud560 \ub54c\ub294 \uc911\uc2ec\uc810, PD, \uac00\uacf5 \uc815\ud655\ub3c4, \ud504\ub9ac\uc998 \uc720\ubc1c \uac00\ub2a5\uc131, \ucc29\uc6a9 \uc790\uc138\ub3c4 \ud568\uaed8 \ud1a0\uc758\ud558\ub294 \uac83\uc774 \uc88b\uc2b5\ub2c8\ub2e4.</li>\n          <li>\uc774 \uc790\ub8cc\ub294 \uad50\uc721\uc6a9 \ud750\ub984 \uc548\ub0b4\uc774\ubbc0\ub85c, \uc2e4\uc81c \uc784\uc0c1 \uc801\uc6a9 \uc2dc\uc5d0\ub294 \uc9c0\ub3c4\uad50\uc218 \ub610\ub294 \uc784\uc0c1 \uc9c0\uce68\uc5d0 \ub530\ub77c \ucd94\uac00\uac80\uc0ac\ub97c \ubcf4\uc644\ud569\ub2c8\ub2e4.</li>\n        </ul>\n      </div>\n    </section>\n\n    <!-- ===================== \ud558\ub2e8 \uace0\uc815 \ube60\ub978 \uc774\ub3d9 \ubc14 ===================== -->\n    <div class=\"sticky-actions\" aria-label=\"\ube60\ub978 \uc774\ub3d9 \ubc84\ud2bc\">\n      <div class=\"sticky-actions-inner\">\n        <a href=\"#section-basic-info\">\uac80\uc0ac \uc785\ub825 \ud654\uba74\uc73c\ub85c \uc774\ub3d9</a>\n        <a href=\"#section-analysis\">\ubd84\uc11d \uacb0\uacfc \ubcf4\uae30</a>\n        <a href=\"#section-treatment\">\ucc98\uce58 \ucd94\ucc9c \ubcf4\uae30</a>\n      </div>\n    </div>\n\n    <footer>\n      \ubcf8 \ud398\uc774\uc9c0\ub294 \uc591\uc548\uc2dc\uae30\ub2a5 \uac80\uc0ac \ud574\uc11d \ud559\uc2b5\uc6a9 \ub2e8\uc77c HTML \uc790\ub8cc\uc785\ub2c8\ub2e4. \uc218\uc5c5 \ubc30\ud3ec, \uc2e4\uc2b5 \uc548\ub0b4, \ubc1c\ud45c \uc790\ub8cc\ub85c \ubc14\ub85c \ud65c\uc6a9\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.\n    </footer>\n  </div>";const shadow=mount.attachShadow({mode:'open'});shadow.innerHTML=`<style>${flowStyle}</style>${flowMarkup}`;function scrollToTarget(href){const target=document.querySelector(href);if(!target)return false;target.scrollIntoView({behavior:'smooth',block:'start'});try{history.replaceState(null,'',href);}catch(e){}return true;}shadow.querySelectorAll('a[href^="#"]').forEach((link)=>{link.addEventListener('click',(event)=>{const href=link.getAttribute('href');if(!href||href==='#')return;if(href==='#flow-chart'||href==='#notice')return;const scrolled=scrollToTarget(href);if(scrolled)event.preventDefault();});});shadow.querySelectorAll('a').forEach((button)=>{button.addEventListener('click',()=>{button.style.transform='translateY(0) scale(0.99)';setTimeout(()=>{button.style.transform='';},120);});});})();</script><script>// ===== 교수자 설정 영역 =====
+    // Google Apps Script 웹앱 URL 붙여넣기
+    const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby3LQHQjY-mlUPiGv2YdahQPrGuxozmG4o3zF9eUPbiI8UldOm0DxAmltNTrJ49Lgjjpw/exec";
+
+    /*
+      =====================================================
+      교육용 기준값 설정 구역
+      -----------------------------------------------------
+      - normal: 정상 범위
+      - caution: 주의 범위(정상에서 조금 벗어난 범위)
+      - type: range / max / min
+      - 필요하면 숫자만 바꿔서 쉽게 수정하세요.
+      =====================================================
+    */
+    const REFERENCE = {
+      pd: {
+        label: "PD",
+        type: "range",
+        normal: [54, 68],
+        caution: [50, 72],
+        unit: "mm",
+        refText: "54~68 mm"
+      },
+      distPhoria: {
+        label: "원거리 수평 사위",
+        type: "range",
+        normal: [-2, 1],
+        caution: [-4, 2],
+        unit: "Δ",
+        refText: "-2 ~ +1Δ (XP/Exo 음수, EP/Eso 양수)"
+      },
+      nearPhoria: {
+        label: "근거리 수평 사위",
+        type: "range",
+        normal: [-6, 0],
+        caution: [-8, 2],
+        unit: "Δ",
+        refText: "-6 ~ 0Δ (XP/Exo 음수, EP/Eso 양수)"
+      },
+      distBI: {
+        label: "원거리 BI break",
+        type: "range",
+        normal: [4, 10],
+        caution: [2, 12],
+        unit: "Δ",
+        refText: "7±3Δ, 즉 4~10Δ (break 기준)"
+      },
+      distBO: {
+        label: "원거리 BO blur",
+        type: "range",
+        normal: [7, 11],
+        caution: [5, 14],
+        unit: "Δ",
+        refText: "7~11Δ (blur 기준)"
+      },
+      nearBI: {
+        label: "근거리 BI blur",
+        type: "range",
+        normal: [10, 14],
+        caution: [8, 18],
+        unit: "Δ",
+        refText: "10~14Δ (blur 기준)"
+      },
+      nearBO: {
+        label: "근거리 BO blur",
+        type: "range",
+        normal: [12, 17],
+        caution: [10, 20],
+        unit: "Δ",
+        refText: "12~17Δ (blur 기준)"
+      },
+      npc: {
+        label: "NPC break",
+        type: "max",
+        normalMax: 10,
+        cautionMax: 15,
+        unit: "cm",
+        refText: "10cm 이하"
+      },
+      npcRecovery: {
+        label: "NPC recovery",
+        type: "custom",
+        unit: "cm",
+        refText: "break 이상, break와 차이 5cm 이내 권장"
+      },
+      nra: {
+        label: "NRA",
+        type: "range",
+        normal: [1.75, 2.50],
+        caution: [1.50, 2.75],
+        unit: "D",
+        refText: "+1.75 ~ +2.50D"
+      },
+      pra: {
+        label: "PRA",
+        type: "range",
+        normal: [-3.50, -1.50],
+        caution: [-4.00, -1.00],
+        unit: "D",
+        refText: "-3.50 ~ -1.50D"
+      },
+      vergenceFacility: {
+        label: "융합용이성",
+        type: "min",
+        normalMin: 12,
+        cautionMin: 8,
+        unit: "cpm",
+        refText: "12 cpm 이상"
+      },
+      lagOD: {
+        label: "조절래그 우안",
+        type: "range",
+        normal: [0.50, 0.75],
+        caution: [0.25, 1.00],
+        unit: "D",
+        refText: "+0.50 ~ +0.75D"
+      },
+      lagOS: {
+        label: "조절래그 좌안",
+        type: "range",
+        normal: [0.50, 0.75],
+        caution: [0.25, 1.00],
+        unit: "D",
+        refText: "+0.50 ~ +0.75D"
+      },
+      lagOU: {
+        label: "조절래그 양안",
+        type: "range",
+        normal: [0.50, 0.75],
+        caution: [0.25, 1.00],
+        unit: "D",
+        refText: "+0.50 ~ +0.75D"
+      },
+      facilityOD: {
+        label: "조절용이성 우안",
+        type: "min",
+        normalMin: 11,
+        cautionMin: 8,
+        unit: "cpm",
+        refText: "11 cpm 이상"
+      },
+      facilityOS: {
+        label: "조절용이성 좌안",
+        type: "min",
+        normalMin: 11,
+        cautionMin: 8,
+        unit: "cpm",
+        refText: "11 cpm 이상"
+      },
+      facilityOU: {
+        label: "조절용이성 양안",
+        type: "min",
+        normalMin: 8,
+        cautionMin: 5,
+        unit: "cpm",
+        refText: "8 cpm 이상"
+      },
+      aca: {
+        label: "AC/A",
+        type: "range",
+        normal: [4, 6],
+        caution: [4, 6],
+        unit: ":1",
+        refText: "4 ~ 6 : 1",
+        formulaText: "AC/A = PD(cm) + (근거리 사위 − 원거리 사위) / 2.5"
+      }
+    };
+
+    const STATUS_META = {
+      normal: { label: "정상", className: "ok" },
+      caution: { label: "주의", className: "warn" },
+      abnormal: { label: "이상", className: "bad" }
+    };
+
+    const ids = [
+      "pd", "distPhoriaValue", "nearPhoriaValue", "distBI", "distBO", "nearBI", "nearBO",
+      "npc", "npcRecovery", "nra", "pra", "vergenceFacility", "lagOD", "lagOS", "lagOU", "npaOD", "npaOS", "npaOU", "facilityOD", "facilityOS", "facilityOU"
+    ];
+
+    const el = (id) => document.getElementById(id);
+    let lastCalculatedResult = null;
+
+    function setupPhoriaControls() {
+      document.querySelectorAll('.phoria-type').forEach(select => {
+        const target = el(select.dataset.target);
+        const toggle = () => {
+          if (select.value === 'Ortho') {
+            target.value = '';
+            target.disabled = true;
+            target.placeholder = '0';
+          } else {
+            target.disabled = false;
+            target.placeholder = '예: 2';
+          }
+        };
+        select.addEventListener('change', toggle);
+        toggle();
+      });
+    }
+
+    function readNumber(id) {
+      return Number(el(id).value);
+    }
+
+    function validateInputs() {
+      const missing = [];
+      ids.forEach(id => {
+        const field = el(id);
+        if (field.disabled) return;
+        if (field.value === '') missing.push(getFieldLabel(id));
+      });
+      if (missing.length > 0) {
+        alert('다음 항목을 입력해주세요.\n- ' + missing.join('\n- '));
+        return false;
+      }
+      const positiveIds = ['pd', 'npc', 'npcRecovery', 'vergenceFacility', 'npaOD', 'npaOS', 'npaOU', 'facilityOD', 'facilityOS', 'facilityOU'];
+      for (const id of positiveIds) {
+        const value = Number(el(id).value);
+        if (!(value > 0)) {
+          alert(`${getFieldLabel(id)} 값은 0보다 커야 합니다.`);
+          return false;
+        }
+      }
+      if (el('age') && el('age').value !== '' && !(Number(el('age').value) > 0)) {
+        alert('나이는 0보다 큰 값으로 입력해주세요.');
+        return false;
+      }
+      return true;
+    }
+
+    function getFieldLabel(id) {
+      const map = {
+        pd: 'PD',
+        age: '나이',
+        distPhoriaValue: '원거리 수평 사위 수치',
+        nearPhoriaValue: '근거리 수평 사위 수치',
+        distBI: '원거리 BI break',
+        distBO: '원거리 BO blur',
+        nearBI: '근거리 BI blur',
+        nearBO: '근거리 BO blur',
+        npc: 'NPC break',
+        npcRecovery: 'NPC recovery',
+        nra: 'NRA',
+        pra: 'PRA',
+        vergenceFacility: '융합용이성',
+        lagOD: '조절래그 우안',
+        lagOS: '조절래그 좌안',
+        lagOU: '조절래그 양안',
+        npaOD: 'NPA 우안',
+        npaOS: 'NPA 좌안',
+        npaOU: 'NPA 양안',
+        facilityOD: '조절용이성 우안',
+        facilityOS: '조절용이성 좌안',
+        facilityOU: '조절용이성 양안'
+      };
+      return map[id] || id;
+    }
+
+    function getSignedPhoria(type, value) {
+      if (type === 'Ortho') return 0;
+      const numeric = Math.abs(Number(value));
+      return type === 'XP' ? -numeric : numeric;
+    }
+
+    function formatGeneral(value, digits = 1) {
+      const n = Number(value);
+      if (Number.isInteger(n)) return String(n);
+      return n.toFixed(digits);
+    }
+
+    function formatPhoria(type, signedValue) {
+      const mag = Math.abs(Number(signedValue));
+      if (type === 'Ortho' || mag === 0) return 'Ortho (0Δ)';
+      if (type === 'XP') return `XP (Exo) ${formatGeneral(mag, 1)}Δ`;
+      if (type === 'EP') return `EP (Eso) ${formatGeneral(mag, 1)}Δ`;
+      return `${type} ${formatGeneral(mag, 1)}Δ`;
+    }
+
+    function compareWithReference(value, ref) {
+      if (ref.type === 'range') {
+        if (value >= ref.normal[0] && value <= ref.normal[1]) return 'normal';
+        if (value >= ref.caution[0] && value <= ref.caution[1]) return 'caution';
+        return 'abnormal';
+      }
+      if (ref.type === 'max') {
+        if (value <= ref.normalMax) return 'normal';
+        if (value <= ref.cautionMax) return 'caution';
+        return 'abnormal';
+      }
+      if (ref.type === 'min') {
+        if (value >= ref.normalMin) return 'normal';
+        if (value >= ref.cautionMin) return 'caution';
+        return 'abnormal';
+      }
+      return 'abnormal';
+    }
+
+    function getNpcRecoveryStatus(npcBreak, npcRecovery) {
+      const breakValue = Number(npcBreak);
+      const recoveryValue = Number(npcRecovery);
+      if (recoveryValue < breakValue) return 'abnormal';
+      if (recoveryValue - breakValue > 5) return 'caution';
+      return 'normal';
+    }
+
+    function acaInterpretation(acaValue) {
+      if (acaValue < 4) return { text: '낮음', status: 'caution' };
+      if (acaValue <= 6) return { text: '정상', status: 'normal' };
+      return { text: '높음', status: 'abnormal' };
+    }
+
+    function calculateAAFromNpa(npaCm) {
+      const numeric = Number(npaCm);
+      if (!(numeric > 0)) return 0;
+      return 100 / numeric;
+    }
+
+    function calculateHofstetter(age) {
+      const numericAge = Number(age);
+      return {
+        min: 15 - 0.25 * numericAge,
+        avg: 18.5 - 0.30 * numericAge,
+        max: 25 - 0.40 * numericAge
+      };
+    }
+
+    function getHofstetterAssessment(age, aaValue) {
+      const numericAge = Number(age);
+      const numericAa = Number(aaValue);
+      if (!(numericAge > 0)) {
+        return { text: '나이 미입력 — Hofstetter 기준 비교 보류', status: 'caution' };
+      }
+      const hof = calculateHofstetter(numericAge);
+      if (numericAa < hof.min) {
+        return { text: '조절력 저하 가능성', status: 'abnormal' };
+      }
+      if (numericAa < hof.avg) {
+        return { text: '정상 하한 또는 경계 범위', status: 'caution' };
+      }
+      return { text: '연령 기준 조절력 양호', status: 'normal' };
+    }
+
+    function buildRow(label, inputText, refText, statusKey) {
+      const meta = STATUS_META[statusKey];
+      return `
+        <tr>
+          <td>${label}</td>
+          <td>${inputText}</td>
+          <td>${refText}</td>
+          <td><span class="badge ${meta.className}">${meta.label}</span></td>
+        </tr>
+      `;
+    }
+
+    function buildPatternCard(item) {
+      const badgeClass = item.possible ? 'warn' : 'ok';
+      const badgeText = item.possible ? '가능성 있음' : '대표 근거 부족';
+      const reasons = item.reasons.length
+        ? `<ul>${item.reasons.map(reason => `<li>${reason}</li>`).join('')}</ul>`
+        : '<ul><li>현재 입력값에서 대표 근거가 충분하지 않음</li></ul>';
+
+      return `
+        <div class="pattern-card">
+          <h4>${item.title}</h4>
+          <div class="pattern-status"><span class="badge ${badgeClass}">${badgeText}</span></div>
+          <div><strong>판정 근거</strong></div>
+          ${reasons}
+        </div>
+      `;
+    }
+
+    function analyzeEducationalPatterns(values) {
+      const patterns = [];
+
+      const ciReasons = [];
+      if (values.nearPhoria <= values.distPhoria - 4) ciReasons.push('근거리 XP(Exo) 증가');
+      if (values.npc > REFERENCE.npc.normalMax) ciReasons.push('NPC 증가');
+      if (values.nearBO < REFERENCE.nearBO.normal[0]) ciReasons.push('근거리 BO 감소');
+      if (values.aca < REFERENCE.aca.normal[0]) ciReasons.push('AC/A 낮음');
+      patterns.push({ title: '폭주부족 가능성', possible: ciReasons.length >= 2, reasons: ciReasons });
+
+      const ceReasons = [];
+      if (values.nearPhoria >= values.distPhoria + 2 && values.nearPhoria > 0) ceReasons.push('근거리 EP(Eso) 증가');
+      if (values.nearBI < REFERENCE.nearBI.normal[0]) ceReasons.push('근거리 BI 감소');
+      if (values.aca > REFERENCE.aca.normal[1]) ceReasons.push('AC/A 높음');
+      patterns.push({ title: '폭주과다 가능성', possible: ceReasons.length >= 2, reasons: ceReasons });
+
+      const diReasons = [];
+      if (values.distPhoria >= values.nearPhoria + 2 && values.distPhoria > 0) diReasons.push('원거리 EP(Eso) 증가');
+      if (values.distBI < REFERENCE.distBI.normal[0]) diReasons.push('원거리 BI 감소');
+      patterns.push({ title: '개산부족 가능성', possible: diReasons.length >= 2, reasons: diReasons });
+
+      const deReasons = [];
+      if (values.distPhoria <= values.nearPhoria - 2 && values.distPhoria < 0) deReasons.push('원거리 XP(Exo) 증가');
+      if (values.distBO < REFERENCE.distBO.normal[0]) deReasons.push('원거리 BO 감소');
+      patterns.push({ title: '개산과다 가능성', possible: deReasons.length >= 2, reasons: deReasons });
+
+      const aiReasons = [];
+      if (values.lagOU > REFERENCE.lagOU.normal[1]) aiReasons.push('조절래그 양안 증가');
+      if (values.facilityOD < REFERENCE.facilityOD.normalMin || values.facilityOS < REFERENCE.facilityOS.normalMin) aiReasons.push('단안 조절용이성 감소');
+      if (values.facilityOU < REFERENCE.facilityOU.normalMin) aiReasons.push('양안 조절용이성 감소');
+      if (values.pra > REFERENCE.pra.normal[1]) aiReasons.push('PRA 감소');
+      patterns.push({ title: '조절부족 가능성', possible: aiReasons.length >= 2, reasons: aiReasons });
+
+      const aeReasons = [];
+      if (values.lagOU < REFERENCE.lagOU.normal[0]) aeReasons.push('조절래그 감소 또는 lead 경향');
+      if (values.nra < REFERENCE.nra.normal[0]) aeReasons.push('NRA 감소');
+      if (values.pra < REFERENCE.pra.normal[0]) aeReasons.push('PRA 증가');
+      if (values.facilityOD < REFERENCE.facilityOD.normalMin || values.facilityOS < REFERENCE.facilityOS.normalMin) aeReasons.push('단안 조절용이성 감소');
+      if (values.facilityOU < REFERENCE.facilityOU.normalMin) aeReasons.push('양안 조절용이성 감소');
+      patterns.push({ title: '조절과다 가능성', possible: aeReasons.length >= 2, reasons: aeReasons });
+
+      return patterns;
+    }
+
+    function buildAdditionalInterpretations(values, statusMap) {
+      const notes = [];
+      if (values.npc > REFERENCE.npc.normalMax) {
+        notes.push('폭주근점이 멀어 폭주기능 저하 가능성을 고려합니다.');
+      }
+      if (values.npcRecovery < values.npc) {
+        notes.push('NPC recovery 값이 break보다 작아 입력 오류 가능성이 있습니다.');
+      }
+      if (values.npcRecovery - values.npc > 5) {
+        notes.push('회복점이 멀어 융합 회복 능력 저하 가능성을 고려합니다.');
+      }
+      if (values.vergenceFacility < REFERENCE.vergenceFacility.normalMin) {
+        notes.push('융합용이성이 낮아 양안시 보상 능력 저하 가능성이 있습니다.');
+      }
+      const mafNormal = values.facilityOD >= REFERENCE.facilityOD.normalMin && values.facilityOS >= REFERENCE.facilityOS.normalMin;
+      const bafLow = values.facilityOU < REFERENCE.facilityOU.normalMin;
+      const mafBothLow = values.facilityOD < REFERENCE.facilityOD.normalMin && values.facilityOS < REFERENCE.facilityOS.normalMin;
+      if (bafLow && mafNormal) {
+        notes.push('단안 조절기능보다 양안 협응 또는 융합 관련 부담 가능성을 고려합니다.');
+      }
+      if (bafLow && mafBothLow) {
+        notes.push('조절기능 이상 가능성을 고려합니다.');
+      }
+      const lagHigh = values.lagOD > REFERENCE.lagOD.normal[1] || values.lagOS > REFERENCE.lagOS.normal[1] || values.lagOU > REFERENCE.lagOU.normal[1];
+      if (lagHigh) {
+        notes.push('조절부족 또는 근거리 조절 반응 저하 가능성을 고려합니다.');
+      }
+      const lagLow = values.lagOD < REFERENCE.lagOD.normal[0] || values.lagOS < REFERENCE.lagOS.normal[0] || values.lagOU < REFERENCE.lagOU.normal[0];
+      if (lagLow) {
+        notes.push('조절과다 또는 조절 긴장 가능성을 고려합니다.');
+      }
+      if (values.ageProvided) {
+        const belowMin = values.aaFromNpaOD < values.hofstetter.min || values.aaFromNpaOS < values.hofstetter.min || values.aaFromNpaOU < values.hofstetter.min;
+        if (belowMin) {
+          notes.push('연령 기준 기대 조절력보다 낮아 조절부족 가능성을 고려합니다.');
+        }
+        const monocularAdequate = values.aaFromNpaOD >= values.hofstetter.min && values.aaFromNpaOS >= values.hofstetter.min;
+        const binocularPoor = values.aaFromNpaOU < values.hofstetter.min || values.npaOU >= Math.min(values.npaOD, values.npaOS) + 2;
+        if (monocularAdequate && binocularPoor) {
+          notes.push('단안 조절력보다 양안 협응 또는 융합 부담 가능성을 함께 고려합니다.');
+        }
+      }
+      if (Math.abs(values.npaOD - values.npaOS) >= 2) {
+        notes.push('우안과 좌안의 조절력 차이가 있어 단안별 재검 또는 굴절상태 확인이 필요합니다.');
+      }
+      return notes;
+    }
+
+    const TREATMENT_GUIDE = {
+      '폭주부족 가능성': [
+        '굴절상태 재확인',
+        'NPC, 근거리 BO, 융합용이성 추가 확인',
+        'BO 융합훈련 고려',
+        'Brock string, Pencil push-up, Barrel card 예시',
+        '근거리 작업환경 및 휴식 교육'
+      ],
+      '폭주과다 가능성': [
+        '근거리 EP 및 AC/A 재확인',
+        'BI 융합력 추가 확인',
+        '근거리 가입도 고려',
+        'BI vergence facility 훈련 고려',
+        '근거리 작업거리 교육'
+      ],
+      '개산부족 가능성': [
+        '원거리 EP 및 원거리 BI 재확인',
+        '원거리 복시 또는 불편감 문진',
+        '프리즘 처방 가능성 교육용 언급',
+        '원거리 BI 훈련 고려'
+      ],
+      '개산과다 가능성': [
+        '원거리 XP 및 원거리 BO 재확인',
+        '원거리 증상 문진',
+        'BO 융합력 훈련 고려',
+        '필요 시 프리즘 또는 시훈련 방향 검토'
+      ],
+      '조절부족 가능성': [
+        '조절력, PRA, 조절래그 재확인',
+        '근거리 가입도 고려',
+        'Minus lens accommodative rock',
+        'Near-far focusing',
+        'Hart chart 훈련 예시'
+      ],
+      '조절과다 가능성': [
+        'NRA, 조절래그, 조절용이성 재확인',
+        'Plus lens relaxation',
+        '조절 이완 훈련 고려',
+        '근거리 작업시간 조절 및 휴식 교육'
+      ]
+    };
+
+    function buildTreatmentCard(item) {
+      const lines = TREATMENT_GUIDE[item.title] || [];
+      return `
+        <div class="treatment-card">
+          <h4>${item.title}</h4>
+          <ul>${lines.map(line => `<li>${line}</li>`).join('')}</ul>
+        </div>
+      `;
+    }
+
+    function buildTreatmentSection(patterns) {
+      const possibleItems = patterns.filter(item => item.possible);
+      if (!possibleItems.length) {
+        return `
+          <div class="summary-box" id="section-treatment">
+            <strong>교육용 처치 방향 예시</strong>
+            <div class="small-note">아래 내용은 확정 처방이 아니라 수업용 처치 방향 예시입니다.</div>
+            <div class="small-note">현재 입력값에서 가능성 있음으로 표시된 항목이 없어 추가 제시되는 교육용 처치 방향 예시는 없습니다.</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="summary-box" id="section-treatment">
+          <strong>교육용 처치 방향 예시</strong>
+          <div class="small-note">아래 내용은 확정 처방이 아니라 수업용 처치 방향 예시입니다.</div>
+          <div class="treatment-grid">${possibleItems.map(buildTreatmentCard).join('')}</div>
+        </div>
+      `;
+    }
+
+    function calculate() {
+      if (!validateInputs()) return;
+
+      const studentName = el('studentName').value.trim() || '-';
+      const studentId = el('studentId').value.trim() || '-';
+      const examDate = el('examDate').value || '-';
+      const ageValue = el('age').value.trim();
+      const age = ageValue === '' ? null : Number(ageValue);
+
+      const pdMm = readNumber('pd');
+      const pdCm = pdMm / 10;
+
+      const distType = el('distPhoriaType').value;
+      const nearType = el('nearPhoriaType').value;
+      const distPhoriaRaw = el('distPhoriaValue').disabled ? 0 : readNumber('distPhoriaValue');
+      const nearPhoriaRaw = el('nearPhoriaValue').disabled ? 0 : readNumber('nearPhoriaValue');
+      const distPhoria = getSignedPhoria(distType, distPhoriaRaw);
+      const nearPhoria = getSignedPhoria(nearType, nearPhoriaRaw);
+
+      const values = {
+        age,
+        pd: pdMm,
+        distPhoria,
+        nearPhoria,
+        distBI: readNumber('distBI'),
+        distBO: readNumber('distBO'),
+        nearBI: readNumber('nearBI'),
+        nearBO: readNumber('nearBO'),
+        npc: readNumber('npc'),
+        npcRecovery: readNumber('npcRecovery'),
+        nra: readNumber('nra'),
+        pra: readNumber('pra'),
+        vergenceFacility: readNumber('vergenceFacility'),
+        lagOD: readNumber('lagOD'),
+        lagOS: readNumber('lagOS'),
+        lagOU: readNumber('lagOU'),
+        npaOD: readNumber('npaOD'),
+        npaOS: readNumber('npaOS'),
+        npaOU: readNumber('npaOU'),
+        facilityOD: readNumber('facilityOD'),
+        facilityOS: readNumber('facilityOS'),
+        facilityOU: readNumber('facilityOU')
+      };
+      values.lag = values.lagOU;
+      values.maf = Math.min(values.facilityOD, values.facilityOS);
+      values.baf = values.facilityOU;
+      values.aaFromNpaOD = calculateAAFromNpa(values.npaOD);
+      values.aaFromNpaOS = calculateAAFromNpa(values.npaOS);
+      values.aaFromNpaOU = calculateAAFromNpa(values.npaOU);
+      values.ageProvided = Number.isFinite(values.age) && values.age > 0;
+      values.hofstetter = values.ageProvided ? calculateHofstetter(values.age) : null;
+      values.hofstetterMin = values.ageProvided ? values.hofstetter.min : null;
+      values.hofstetterAvg = values.ageProvided ? values.hofstetter.avg : null;
+      values.hofstetterMax = values.ageProvided ? values.hofstetter.max : null;
+
+      const aca = pdCm + (nearPhoria - distPhoria) / 2.5;
+      const acaRounded = Math.round(aca * 10) / 10;
+      values.aca = acaRounded;
+
+      const acaText = `${acaRounded.toFixed(1)} : 1`;
+      const acaInterp = acaInterpretation(acaRounded);
+
+      const statusMap = {
+        pd: compareWithReference(values.pd, REFERENCE.pd),
+        distPhoria: compareWithReference(values.distPhoria, REFERENCE.distPhoria),
+        nearPhoria: compareWithReference(values.nearPhoria, REFERENCE.nearPhoria),
+        distBI: compareWithReference(values.distBI, REFERENCE.distBI),
+        distBO: compareWithReference(values.distBO, REFERENCE.distBO),
+        nearBI: compareWithReference(values.nearBI, REFERENCE.nearBI),
+        nearBO: compareWithReference(values.nearBO, REFERENCE.nearBO),
+        npc: compareWithReference(values.npc, REFERENCE.npc),
+        npcRecovery: getNpcRecoveryStatus(values.npc, values.npcRecovery),
+        nra: compareWithReference(values.nra, REFERENCE.nra),
+        pra: compareWithReference(values.pra, REFERENCE.pra),
+        vergenceFacility: compareWithReference(values.vergenceFacility, REFERENCE.vergenceFacility),
+        lagOD: compareWithReference(values.lagOD, REFERENCE.lagOD),
+        lagOS: compareWithReference(values.lagOS, REFERENCE.lagOS),
+        lagOU: compareWithReference(values.lagOU, REFERENCE.lagOU),
+        facilityOD: compareWithReference(values.facilityOD, REFERENCE.facilityOD),
+        facilityOS: compareWithReference(values.facilityOS, REFERENCE.facilityOS),
+        facilityOU: compareWithReference(values.facilityOU, REFERENCE.facilityOU),
+        aca: compareWithReference(values.aca, REFERENCE.aca)
+      };
+
+      const npaAssessmentOD = getHofstetterAssessment(values.age, values.aaFromNpaOD);
+      const npaAssessmentOS = getHofstetterAssessment(values.age, values.aaFromNpaOS);
+      const npaAssessmentOU = getHofstetterAssessment(values.age, values.aaFromNpaOU);
+      const hofstetterPendingText = '나이 미입력 — Hofstetter 기준 비교 보류';
+      const hofMinText = values.ageProvided ? `${values.hofstetterMin.toFixed(2)} D` : '-';
+      const hofAvgText = values.ageProvided ? `${values.hofstetterAvg.toFixed(2)} D` : '-';
+      const hofMaxText = values.ageProvided ? `${values.hofstetterMax.toFixed(2)} D` : '-';
+
+      const rows = [
+        buildRow('PD', `${formatGeneral(values.pd, 1)} mm`, REFERENCE.pd.refText, statusMap.pd),
+        buildRow('원거리 수평 사위', `${formatPhoria(distType, values.distPhoria)} / signed ${formatGeneral(values.distPhoria, 1)}Δ`, REFERENCE.distPhoria.refText, statusMap.distPhoria),
+        buildRow('근거리 수평 사위', `${formatPhoria(nearType, values.nearPhoria)} / signed ${formatGeneral(values.nearPhoria, 1)}Δ`, REFERENCE.nearPhoria.refText, statusMap.nearPhoria),
+        buildRow('원거리 BI break', `${formatGeneral(values.distBI, 1)}Δ`, REFERENCE.distBI.refText, statusMap.distBI),
+        buildRow('원거리 BO blur', `${formatGeneral(values.distBO, 1)}Δ`, REFERENCE.distBO.refText, statusMap.distBO),
+        buildRow('근거리 BI blur', `${formatGeneral(values.nearBI, 1)}Δ`, REFERENCE.nearBI.refText, statusMap.nearBI),
+        buildRow('근거리 BO blur', `${formatGeneral(values.nearBO, 1)}Δ`, REFERENCE.nearBO.refText, statusMap.nearBO),
+        buildRow('NPC break', `${formatGeneral(values.npc, 1)} cm`, REFERENCE.npc.refText, statusMap.npc),
+        buildRow('NPC recovery', `${formatGeneral(values.npcRecovery, 1)} cm`, REFERENCE.npcRecovery.refText, statusMap.npcRecovery),
+        buildRow('NRA', `${Number(values.nra).toFixed(2)} D`, REFERENCE.nra.refText, statusMap.nra),
+        buildRow('PRA', `${Number(values.pra).toFixed(2)} D`, REFERENCE.pra.refText, statusMap.pra),
+        buildRow('융합용이성', `${formatGeneral(values.vergenceFacility, 0)} cpm`, REFERENCE.vergenceFacility.refText, statusMap.vergenceFacility),
+        buildRow('조절래그 우안', `${Number(values.lagOD).toFixed(2)} D`, REFERENCE.lagOD.refText, statusMap.lagOD),
+        buildRow('조절래그 좌안', `${Number(values.lagOS).toFixed(2)} D`, REFERENCE.lagOS.refText, statusMap.lagOS),
+        buildRow('조절래그 양안', `${Number(values.lagOU).toFixed(2)} D`, REFERENCE.lagOU.refText, statusMap.lagOU),
+        buildRow('NPA 우안(cm)', `${formatGeneral(values.npaOD, 1)} cm`, values.ageProvided ? `AA ${values.aaFromNpaOD.toFixed(2)}D / Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOD.status),
+        buildRow('NPA 좌안(cm)', `${formatGeneral(values.npaOS, 1)} cm`, values.ageProvided ? `AA ${values.aaFromNpaOS.toFixed(2)}D / Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOS.status),
+        buildRow('NPA 양안(cm)', `${formatGeneral(values.npaOU, 1)} cm`, values.ageProvided ? `AA ${values.aaFromNpaOU.toFixed(2)}D / Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOU.status),
+        buildRow('변환 조절력 우안(D)', `${values.aaFromNpaOD.toFixed(2)} D`, values.ageProvided ? `Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D / 평균 ${values.hofstetterAvg.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOD.status),
+        buildRow('변환 조절력 좌안(D)', `${values.aaFromNpaOS.toFixed(2)} D`, values.ageProvided ? `Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D / 평균 ${values.hofstetterAvg.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOS.status),
+        buildRow('변환 조절력 양안(D)', `${values.aaFromNpaOU.toFixed(2)} D`, values.ageProvided ? `Hofstetter 최소 ${values.hofstetterMin.toFixed(2)}D / 평균 ${values.hofstetterAvg.toFixed(2)}D` : hofstetterPendingText, npaAssessmentOU.status),
+        buildRow('Hofstetter 최소값(D)', hofMinText, '15 - 0.25 × 나이', values.ageProvided ? 'normal' : 'caution'),
+        buildRow('Hofstetter 평균값(D)', hofAvgText, '18.5 - 0.30 × 나이', values.ageProvided ? 'normal' : 'caution'),
+        buildRow('Hofstetter 최대값(D)', hofMaxText, '25 - 0.40 × 나이', values.ageProvided ? 'normal' : 'caution'),
+        buildRow('조절용이성 우안', `${formatGeneral(values.facilityOD, 0)} cpm`, REFERENCE.facilityOD.refText, statusMap.facilityOD),
+        buildRow('조절용이성 좌안', `${formatGeneral(values.facilityOS, 0)} cpm`, REFERENCE.facilityOS.refText, statusMap.facilityOS),
+        buildRow('조절용이성 양안', `${formatGeneral(values.facilityOU, 0)} cpm`, REFERENCE.facilityOU.refText, statusMap.facilityOU),
+        buildRow('AC/A', acaText, REFERENCE.aca.refText, statusMap.aca)
+      ].join('');
+
+      const abnormalItems = [];
+      const cautionItems = [];
+      Object.keys(statusMap).forEach(key => {
+        if (statusMap[key] === 'abnormal') abnormalItems.push(REFERENCE[key].label);
+        if (statusMap[key] === 'caution') cautionItems.push(REFERENCE[key].label);
+      });
+      const outOfRangeItems = [...cautionItems, ...abnormalItems];
+
+      const normalCount = Object.values(statusMap).filter(v => v === 'normal').length;
+      const cautionCount = Object.values(statusMap).filter(v => v === 'caution').length;
+      const abnormalCount = Object.values(statusMap).filter(v => v === 'abnormal').length;
+
+      let summaryHtml = '';
+      if (abnormalItems.length === 0 && cautionItems.length === 0) {
+        summaryHtml = '<p>모든 입력 항목이 현재 설정된 교육용 기준 범위 안에 있습니다.</p>';
+      } else {
+        summaryHtml = '<ul>';
+        if (abnormalItems.length) summaryHtml += `<li><strong>이상:</strong> ${abnormalItems.join(', ')}</li>`;
+        if (cautionItems.length) summaryHtml += `<li><strong>주의:</strong> ${cautionItems.join(', ')}</li>`;
+        summaryHtml += '</ul>';
+      }
+
+      let guideText = '입력된 검사값은 교육용 기준 범위와 비교되었으며, 이 결과는 확정 진단이 아니라 양안시기능 평가를 위한 학습용 참고 자료입니다. Exo = 외사위, Eso = 내사위입니다. 융합버전스 기준 비교는 원거리 BI는 break point, 원거리 BO 및 근거리 BI/BO는 blur point를 기준으로 하였습니다.';
+      if (abnormalItems.length || cautionItems.length) {
+        guideText = '입력된 검사값 중 일부 항목이 기준 범위를 벗어났습니다. 이 결과는 확정 진단이 아니라 양안시기능 평가를 위한 학습용 참고 자료입니다. Exo = 외사위, Eso = 내사위입니다. 융합버전스 기준 비교는 원거리 BI는 break point, 원거리 BO 및 근거리 BI/BO는 blur point를 기준으로 하였습니다.';
+      }
+
+      const formulaText = `AC/A = PD(cm) + (근거리 사위 − 원거리 사위) / 2.5 = ${pdCm.toFixed(1)} + (${formatGeneral(nearPhoria, 1)} − ${formatGeneral(distPhoria, 1)}) / 2.5`;
+      const educationalPatterns = analyzeEducationalPatterns(values);
+      const additionalInterpretations = buildAdditionalInterpretations(values, statusMap);
+      const additionalInterpretationHtml = additionalInterpretations.length
+        ? `<div class="summary-box"><strong>추가 교육용 해석</strong><ul>${additionalInterpretations.map(item => `<li>${item}</li>`).join('')}</ul></div>`
+        : '';
+      const patternHtml = educationalPatterns.map(buildPatternCard).join('');
+      const treatmentHtml = buildTreatmentSection(educationalPatterns);
+
+      lastCalculatedResult = {
+        studentName,
+        studentId,
+        examDate,
+        age: values.age,
+        ageProvided: values.ageProvided,
+        pdMm,
+        distType,
+        distPhoriaRaw: distType === 'Ortho' ? 0 : Math.abs(distPhoriaRaw),
+        distPhoriaSigned: distPhoria,
+        nearType,
+        nearPhoriaRaw: nearType === 'Ortho' ? 0 : Math.abs(nearPhoriaRaw),
+        nearPhoriaSigned: nearPhoria,
+        values,
+        acaText,
+        acaInterp,
+        cautionItems,
+        abnormalItems,
+        outOfRangeItems
+      };
+
+      el('resultArea').innerHTML = `
+        <div class="summary-box">
+          <strong>학생 제출 정보</strong>
+          <div class="print-meta">
+            <div class="meta-card"><span>이름</span>${studentName}</div>
+            <div class="meta-card"><span>학번</span>${studentId}</div>
+            <div class="meta-card"><span>검사일</span>${examDate}</div>
+            <div class="meta-card"><span>나이</span>${values.ageProvided ? `${formatGeneral(values.age, 0)}세` : '-'}</div>
+          </div>
+        </div>
+
+        <div class="aca-box">
+          <div><strong>AC/A 결과</strong></div>
+          <div class="aca-value">AC/A = ${acaText}</div>
+          <div><span class="badge ${STATUS_META[acaInterp.status].className}">판정: ${acaInterp.text}</span></div>
+          <div class="small-note">AC/A 판정: <strong>${acaInterp.text}</strong></div>
+        </div>
+
+        <div class="formula-box">
+          <strong>AC/A 계산식 적용</strong>
+          <div>${formulaText}</div>
+          <div class="small-note">부호 규칙 적용:<br />XP(Exo) = 음수(-)<br />EP(Eso) = 양수(+)<br />Ortho = 0</div>
+        </div>
+
+        <div class="info-box">
+          <strong>AC/A 해석</strong>
+          <div>4:1 미만: 낮음 / 4:1 ~ 6:1: 정상 / 6:1 초과: 높음</div>
+          <div class="small-note">핵심 계산: <strong>${REFERENCE.aca.formulaText}</strong></div>
+          <div class="small-note">융합력 기준 비교: <strong>원거리 BI break / 원거리 BO 및 근거리 BI·BO blur 기준</strong></div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span>정상</span>${normalCount}</div>
+          <div class="stat"><span>주의</span>${cautionCount}</div>
+          <div class="stat"><span>이상</span>${abnormalCount}</div>
+        </div>
+
+        <div class="summary-box">
+          <strong>기준 벗어난 항목</strong>
+          ${summaryHtml}
+        </div>
+
+        <div class="guide-box" id="section-analysis">
+          <strong>학생용 간단 해설</strong>
+          <div>${guideText}</div>
+        </div>
+
+        ${additionalInterpretationHtml}
+
+        <div class="summary-box" id="section-analysis-pattern">
+          <strong>교육용 양안시기능 이상 패턴 분석</strong>
+          <div class="small-note">확정 진단이 아니라 교육용 패턴 분석입니다.</div>
+          <div class="pattern-grid">${patternHtml}</div>
+        </div>
+
+        ${treatmentHtml}
+
+        <div class="summary-box" id="section-criteria">
+          <strong>Morgan's Norm 및 임상 기준값 비교</strong>
+          <table>
+            <thead>
+              <tr>
+                <th>검사 항목</th>
+                <th>입력값</th>
+                <th>기준값</th>
+                <th>판정</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+          <div class="small-note">※ 현재 기준값은 교육용 임시값입니다. 필요 시 HTML 코드의 REFERENCE 객체를 수정하여 수업 기준에 맞게 바꿀 수 있습니다.</div>
+          <div class="small-note">※ NPA는 AA(D) = 100 / NPA(cm)로 변환하였고, 나이가 입력된 경우 Hofstetter 공식(최소/평균/최대)과 함께 비교했습니다.</div>
+          <div class="small-note">※ 융합버전스 기준 비교는 원거리 BI는 break point, 원거리 BO 및 근거리 BI/BO는 blur point를 기준으로 하였습니다.</div>
+          <div class="small-note">※ NPC recovery는 break 이상이며 break와의 차이가 큰 경우 회복 능력 저하 가능성을 교육용으로 해석합니다.</div>
+        </div>
+
+        <div class="summary-box">
+          <strong>서명란</strong>
+          <div class="signature-box">
+            <div class="signature-line">제출자 서명: ____________</div>
+            <div class="signature-line">확인자 서명: ____________</div>
+          </div>
+        </div>
+
+        <div class="summary-box" id="section-reference">
+          <strong>참고문헌 및 기준값 출처</strong>
+          <ol>
+            <li>Morgan MW. The clinical aspects of accommodation and convergence. American Journal of Optometry and Archives of American Academy of Optometry. 1944;21:301-313.</li>
+            <li>Scheiman M, Wick B. Clinical Management of Binocular Vision: Heterophoric, Accommodative, and Eye Movement Disorders. 5th ed. Philadelphia: Wolters Kluwer; 2020.</li>
+            <li>Scheiman M, Rouse M. Optometric Management of Learning-Related Vision Problems. 2nd ed. St. Louis: Mosby Elsevier; 2006.</li>
+            <li>American Optometric Association. Care of the Patient with Accommodative and Vergence Dysfunction. Optometric Clinical Practice Guideline.</li>
+            <li>Maples WC, Hoenes R. Near point of convergence norms measured in elementary school children. Optometry and Vision Science. 2007;84(3):224-228.</li>
+            <li>Hofstetter HW. Useful age-amplitude formula. Optom World. 1950;38:42-45.</li>
+          </ol>
+          <div class="small-note">본 기준값은 Morgan’s Norm과 양안시기능 및 조절기능 평가에서 널리 사용되는 임상 기준을 교육 목적으로 정리한 것입니다. 실제 임상 적용 시에는 연령, 증상, 굴절상태, 검사방법, 검사 신뢰도를 함께 고려해야 합니다.</div>
+        </div>
+      `;
+    }
+
+    function sanitizeFilePart(value) {
+      return String(value || '-').replace(/[\\/:*?"<>|]/g, '_').trim() || '-';
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? '');
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+
+    function downloadCsv() {
+      if (!lastCalculatedResult) {
+        alert('먼저 계산하기를 눌러주세요');
+        return;
+      }
+
+      const r = lastCalculatedResult;
+      const rows = [
+        ['이름', r.studentName],
+        ['학번', r.studentId],
+        ['검사일', r.examDate],
+        ['나이', r.ageProvided ? `${formatGeneral(r.age, 0)} 세` : ''],
+        ['age', r.ageProvided ? formatGeneral(r.age, 0) : ''],
+        ['PD', `${formatGeneral(r.pdMm, 1)} mm`],
+        ['원거리 수평 사위 유형', r.distType],
+        ['원거리 수평 사위 값', `${formatGeneral(r.distPhoriaRaw, 1)}Δ`],
+        ['원거리 수평 사위 signed 값', `${formatGeneral(r.distPhoriaSigned, 1)}Δ`],
+        ['근거리 수평 사위 유형', r.nearType],
+        ['근거리 수평 사위 값', `${formatGeneral(r.nearPhoriaRaw, 1)}Δ`],
+        ['근거리 수평 사위 signed 값', `${formatGeneral(r.nearPhoriaSigned, 1)}Δ`],
+        ['원거리 BI break', `${formatGeneral(r.values.distBI, 1)}Δ`],
+        ['원거리 BO blur', `${formatGeneral(r.values.distBO, 1)}Δ`],
+        ['근거리 BI blur', `${formatGeneral(r.values.nearBI, 1)}Δ`],
+        ['근거리 BO blur', `${formatGeneral(r.values.nearBO, 1)}Δ`],
+        ['NPC break', `${formatGeneral(r.values.npc, 1)} cm`],
+        ['NPC recovery', `${formatGeneral(r.values.npcRecovery, 1)} cm`],
+        ['npcRecovery', formatGeneral(r.values.npcRecovery, 1)],
+        ['NRA', `${Number(r.values.nra).toFixed(2)} D`],
+        ['PRA', `${Number(r.values.pra).toFixed(2)} D`],
+        ['융합용이성', `${formatGeneral(r.values.vergenceFacility, 0)} cpm`],
+        ['조절래그 우안', `${Number(r.values.lagOD).toFixed(2)} D`],
+        ['조절래그 좌안', `${Number(r.values.lagOS).toFixed(2)} D`],
+        ['조절래그 양안', `${Number(r.values.lagOU).toFixed(2)} D`],
+        ['NPA 우안', `${formatGeneral(r.values.npaOD, 1)} cm`],
+        ['NPA 좌안', `${formatGeneral(r.values.npaOS, 1)} cm`],
+        ['NPA 양안', `${formatGeneral(r.values.npaOU, 1)} cm`],
+        ['변환 조절력 우안', `${r.values.aaFromNpaOD.toFixed(2)} D`],
+        ['변환 조절력 좌안', `${r.values.aaFromNpaOS.toFixed(2)} D`],
+        ['변환 조절력 양안', `${r.values.aaFromNpaOU.toFixed(2)} D`],
+        ['Hofstetter 최소값', r.values.ageProvided ? `${r.values.hofstetterMin.toFixed(2)} D` : ''],
+        ['Hofstetter 평균값', r.values.ageProvided ? `${r.values.hofstetterAvg.toFixed(2)} D` : ''],
+        ['Hofstetter 최대값', r.values.ageProvided ? `${r.values.hofstetterMax.toFixed(2)} D` : ''],
+        ['npaOD', formatGeneral(r.values.npaOD, 1)],
+        ['npaOS', formatGeneral(r.values.npaOS, 1)],
+        ['npaOU', formatGeneral(r.values.npaOU, 1)],
+        ['aaFromNpaOD', r.values.aaFromNpaOD.toFixed(2)],
+        ['aaFromNpaOS', r.values.aaFromNpaOS.toFixed(2)],
+        ['aaFromNpaOU', r.values.aaFromNpaOU.toFixed(2)],
+        ['hofstetterMin', r.values.ageProvided ? r.values.hofstetterMin.toFixed(2) : ''],
+        ['hofstetterAvg', r.values.ageProvided ? r.values.hofstetterAvg.toFixed(2) : ''],
+        ['hofstetterMax', r.values.ageProvided ? r.values.hofstetterMax.toFixed(2) : ''],
+        ['조절용이성 우안', `${formatGeneral(r.values.facilityOD, 0)} cpm`],
+        ['조절용이성 좌안', `${formatGeneral(r.values.facilityOS, 0)} cpm`],
+        ['조절용이성 양안', `${formatGeneral(r.values.facilityOU, 0)} cpm`],
+        ['AC/A 계산 결과', r.acaText],
+        ['AC/A 판정', r.acaInterp.text],
+        ['기준 벗어난 항목', r.outOfRangeItems.length ? r.outOfRangeItems.join(', ') : '없음'],
+        ['주의 항목', r.cautionItems.length ? r.cautionItems.join(', ') : '없음'],
+        ['이상 항목', r.abnormalItems.length ? r.abnormalItems.join(', ') : '없음']
+      ];
+
+      const csvText = '\uFEFF' + rows.map(row => row.map(csvEscape).join(',')).join('\r\n');
+      const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const safeDate = sanitizeFilePart(r.examDate || '-');
+      const safeId = sanitizeFilePart(r.studentId || '-');
+      const safeName = sanitizeFilePart(r.studentName || '-');
+      link.href = url;
+      link.download = `양안시기능검사_${safeId}_${safeName}_${safeDate}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function resetForm() {
+      document.querySelectorAll('input').forEach(input => {
+        if (input.type === 'number' || input.type === 'text' || input.type === 'date') input.value = '';
+      });
+      el('distPhoriaType').value = 'XP';
+      el('nearPhoriaType').value = 'XP';
+      setupPhoriaControls();
+      lastCalculatedResult = null;
+      el('resultArea').innerHTML = `
+        <div class="placeholder">
+          <strong>초기화되었습니다.</strong><br />
+          새 검사값을 입력한 뒤 <strong>계산하기</strong> 버튼을 누르세요.
+        </div>
+      `;
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', calculate);
+    document.getElementById('resetBtn').addEventListener('click', resetForm);
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    async function submitToGoogleSheets() {
+      if (!lastCalculatedResult) {
+        alert('먼저 계산하기를 눌러주세요');
+        return;
+      }
+
+      const r = lastCalculatedResult;
+      if (!r.studentName || r.studentName === '-' || !r.studentId || r.studentId === '-') {
+        alert('이름과 학번이 없으면 제출할 수 없습니다.');
+        return;
+      }
+
+      if (!GOOGLE_SHEETS_WEB_APP_URL) {
+        alert('교수자 설정 영역에 Google Apps Script 웹앱 URL을 붙여넣어주세요.');
+        return;
+      }
+
+      const payload = {
+        '제출일시': new Date().toLocaleString('ko-KR', { hour12: false }),
+        '이름': r.studentName,
+        '학번': r.studentId,
+        '검사일': r.examDate,
+        '나이': r.ageProvided ? `${formatGeneral(r.age, 0)} 세` : '',
+        'age': r.ageProvided ? formatGeneral(r.age, 0) : '',
+        'PD': `${formatGeneral(r.pdMm, 1)} mm`,
+        '원거리 수평 사위 유형': r.distType,
+        '원거리 수평 사위 값': `${formatGeneral(r.distPhoriaRaw, 1)}Δ`,
+        '원거리 수평 사위 signed 값': `${formatGeneral(r.distPhoriaSigned, 1)}Δ`,
+        '근거리 수평 사위 유형': r.nearType,
+        '근거리 수평 사위 값': `${formatGeneral(r.nearPhoriaRaw, 1)}Δ`,
+        '근거리 수평 사위 signed 값': `${formatGeneral(r.nearPhoriaSigned, 1)}Δ`,
+        '원거리 BI break': `${formatGeneral(r.values.distBI, 1)}Δ`,
+        '원거리 BO blur': `${formatGeneral(r.values.distBO, 1)}Δ`,
+        '근거리 BI blur': `${formatGeneral(r.values.nearBI, 1)}Δ`,
+        '근거리 BO blur': `${formatGeneral(r.values.nearBO, 1)}Δ`,
+        'NPC break': `${formatGeneral(r.values.npc, 1)} cm`,
+        'NPC recovery': `${formatGeneral(r.values.npcRecovery, 1)} cm`,
+        'npcRecovery': formatGeneral(r.values.npcRecovery, 1),
+        'NRA': `${Number(r.values.nra).toFixed(2)} D`,
+        'PRA': `${Number(r.values.pra).toFixed(2)} D`,
+        '융합용이성': `${formatGeneral(r.values.vergenceFacility, 0)} cpm`,
+        '조절래그 우안': `${Number(r.values.lagOD).toFixed(2)} D`,
+        '조절래그 좌안': `${Number(r.values.lagOS).toFixed(2)} D`,
+        '조절래그 양안': `${Number(r.values.lagOU).toFixed(2)} D`,
+        'NPA 우안': `${formatGeneral(r.values.npaOD, 1)} cm`,
+        'NPA 좌안': `${formatGeneral(r.values.npaOS, 1)} cm`,
+        'NPA 양안': `${formatGeneral(r.values.npaOU, 1)} cm`,
+        '변환 조절력 우안': `${r.values.aaFromNpaOD.toFixed(2)} D`,
+        '변환 조절력 좌안': `${r.values.aaFromNpaOS.toFixed(2)} D`,
+        '변환 조절력 양안': `${r.values.aaFromNpaOU.toFixed(2)} D`,
+        'Hofstetter 최소값': r.values.ageProvided ? `${r.values.hofstetterMin.toFixed(2)} D` : '',
+        'Hofstetter 평균값': r.values.ageProvided ? `${r.values.hofstetterAvg.toFixed(2)} D` : '',
+        'Hofstetter 최대값': r.values.ageProvided ? `${r.values.hofstetterMax.toFixed(2)} D` : '',
+        'npaOD': formatGeneral(r.values.npaOD, 1),
+        'npaOS': formatGeneral(r.values.npaOS, 1),
+        'npaOU': formatGeneral(r.values.npaOU, 1),
+        'aaFromNpaOD': r.values.aaFromNpaOD.toFixed(2),
+        'aaFromNpaOS': r.values.aaFromNpaOS.toFixed(2),
+        'aaFromNpaOU': r.values.aaFromNpaOU.toFixed(2),
+        'hofstetterMin': r.values.ageProvided ? r.values.hofstetterMin.toFixed(2) : '',
+        'hofstetterAvg': r.values.ageProvided ? r.values.hofstetterAvg.toFixed(2) : '',
+        'hofstetterMax': r.values.ageProvided ? r.values.hofstetterMax.toFixed(2) : '',
+        '조절용이성 우안': `${formatGeneral(r.values.facilityOD, 0)} cpm`,
+        '조절용이성 좌안': `${formatGeneral(r.values.facilityOS, 0)} cpm`,
+        '조절용이성 양안': `${formatGeneral(r.values.facilityOU, 0)} cpm`,
+        'AC/A 계산 결과': r.acaText,
+        'AC/A 판정': r.acaInterp.text,
+        '기준 벗어난 항목': r.outOfRangeItems.length ? r.outOfRangeItems.join(', ') : '없음',
+        '주의 항목': r.cautionItems.length ? r.cautionItems.join(', ') : '없음',
+        '이상 항목': r.abnormalItems.length ? r.abnormalItems.join(', ') : '없음'
+      };
+
+      try {
+        let response;
+        let result;
+        try {
+          response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          result = await response.json();
+          if (!response.ok || !result.success) throw new Error('submit failed');
+        } catch (firstError) {
+          await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+        }
+        alert('Google Sheets에 제출되었습니다.');
+      } catch (error) {
+        alert('제출 중 오류가 발생했습니다. CSV 다운로드로 제출해주세요.');
+      }
+    }
+
+    document.getElementById('csvBtn').addEventListener('click', downloadCsv);
+    document.getElementById('sheetSubmitBtn').addEventListener('click', submitToGoogleSheets);
+
+    setupPhoriaControls();
+function scrollToIntegratedSection(hash){const direct=document.querySelector(hash);if(direct){direct.scrollIntoView({behavior:'smooth',block:'start'});return true;}if(hash==='#section-criteria'||hash==='#section-analysis'||hash==='#section-treatment'){const fallback=document.getElementById('resultCard')||document.getElementById('resultArea');if(fallback){fallback.scrollIntoView({behavior:'smooth',block:'start'});return true;}}return false;}
+window.addEventListener('hashchange',function(){if(location.hash&&location.hash.startsWith('#section-')){setTimeout(function(){scrollToIntegratedSection(location.hash);},30);}});
+window.addEventListener('load',function(){if(location.hash&&location.hash.startsWith('#section-')){setTimeout(function(){scrollToIntegratedSection(location.hash);},80);}});
+</script></body></html>
